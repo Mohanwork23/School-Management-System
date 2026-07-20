@@ -26,10 +26,10 @@ public class ParentController {
         return ResponseEntity.ok(parentService.getChildAttendance(parentId));
     }
 
-//    @GetMapping("/{parentId}/fees")
-//    public ResponseEntity<ApiResponse> getChildFeeStatus(@PathVariable String parentId) {
-//        return ResponseEntity.ok(parentService.getChildFeeStatus(parentId));
-//    }
+    @GetMapping("/{parentId}/fees")
+    public ResponseEntity<ApiResponse> getChildFeeStatus(@PathVariable String parentId) {
+        return ResponseEntity.ok(parentService.getChildFeeStatus(parentId));
+    }
 
     @GetMapping("/{parentId}/results")
     public ResponseEntity<ApiResponse> getChildResults(@PathVariable String parentId) {

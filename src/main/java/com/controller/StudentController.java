@@ -16,10 +16,10 @@ public class StudentController {
 
     private final StudentService studentService;
 
-//    @GetMapping("/{studentId}/timetable")
-//    public ResponseEntity<ApiResponse> getTimetable(@PathVariable String studentId) {
-//        return ResponseEntity.ok(studentService.getTimeTableForStudent(studentId));
-//    }
+    @GetMapping("/{studentId}/timetable")
+    public ResponseEntity<ApiResponse> getTimetable(@PathVariable String studentId) {
+        return ResponseEntity.ok(studentService.getTimeTableForStudent(studentId));
+    }
 
     @GetMapping("/{studentId}/grades")
     public ResponseEntity<ApiResponse> getGrades(@PathVariable String studentId) {
@@ -44,10 +44,10 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getAttendanceForStudent(studentId));
     }
 
-//    @GetMapping("/{studentId}/fees")
-//    public ResponseEntity<ApiResponse> getFeeStatus(@PathVariable String studentId) {
-//        return ResponseEntity.ok(studentService.getFeeStatus(studentId));
-//    }
+    @GetMapping("/{studentId}/fees")
+    public ResponseEntity<ApiResponse> getFeeStatus(@PathVariable String studentId) {
+        return ResponseEntity.ok(studentService.getFeeStatus(studentId));
+    }
 
     @GetMapping("/{studentId}/results")
     public ResponseEntity<ApiResponse> getStudentResults(@PathVariable String studentId) {

@@ -37,7 +37,7 @@ public class AdminController {
 
     @PostMapping("/register-student")
     public ResponseEntity<ApiResponse> registerStudent(@RequestBody RegisterStudentDTO dto) {
-        System.out.println("Hello");
+       // System.out.println("Hello");
         return ResponseEntity.ok(adminService.registerStudent(dto));
     }
 

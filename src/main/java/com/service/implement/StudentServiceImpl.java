@@ -15,6 +15,7 @@ import com.entity.academic.Assignment;
 import com.entity.academic.AssignmentSubmission;
 import com.entity.academic.Result;
 import com.entity.attendance.Attendance;
+import com.entity.fees.FeePayment;
 import com.entity.users.Student;
 import com.exception.ResourceNotFoundException;
 import com.repository.AssignmentRepository;
@@ -22,6 +23,7 @@ import com.repository.AssignmentSubmissionRepository;
 import com.repository.AttendanceRepository;
 import com.repository.ResultRepository;
 import com.repository.StudentRepository;
+import com.repository.fees.FeePaymentRepository;
 import com.service.StudentService;
 
 import lombok.RequiredArgsConstructor;
@@ -35,10 +37,19 @@ public class StudentServiceImpl implements StudentService {
     private final AssignmentSubmissionRepository assignmentSubmissionRepository;
     private final AttendanceRepository attendanceRepository;
     private final ResultRepository resultRepository;
+    private final FeePaymentRepository feePaymentRepository;
 
     private Student getStudent(String studentId) {
         return studentRepository.findByStudentId(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + studentId));
+    }
+
+    @Override
+    public ApiResponse getTimeTableForStudent(String studentId) {
+        Student student = getStudent(studentId);
+        if (student.getClassRoom() == null)
+            return new ApiResponse("No class assigned", false);
+        return new ApiResponse("Timetable fetched", true, student.getClassRoom());
     }
 
 //    @Override
@@ -127,23 +138,18 @@ public class StudentServiceImpl implements StudentService {
         return new ApiResponse("Attendance fetched", true, dtos);
     }
 
-//    @Override
-//    public ApiResponse getFeeStatus(String studentId) {
-//        Student student = getStudent(studentId);
-//        List<FeeInvoice> invoices = feeInvoiceRepository.findByStudent(student);
-//
-//        List<FeeInvoiceDTO> dtos = invoices.stream().map(invoice -> {
-//            FeeInvoiceDTO dto = new FeeInvoiceDTO();
-//            dto.setCategory(invoice.getCategory().getName());
-//            dto.setAmount(invoice.getTotalAmount());
-//            dto.setPaid(invoice.isPaid());
-//            dto.setIssuedDate(invoice.getDueDate().toString());
-//            dto.setPaidDate(invoice.getDueDate() != null ? invoice.getDueDate().toString() : null);
-//            return dto;
-//        }).collect(Collectors.toList());
-//
-//        return new ApiResponse("Fee status fetched", true, dtos);
-//    }
+    @Override
+    public ApiResponse getFeeStatus(String studentId) {
+        Student student = getStudent(studentId);
+        List<FeePayment> payments = feePaymentRepository.findByStudentId(student.getId());
+        double totalPaid = payments.stream().mapToDouble(FeePayment::getAmountPaid).sum();
+        Map<String, Object> feeStatus = new HashMap<>();
+        feeStatus.put("studentId", studentId);
+        feeStatus.put("studentName", student.getFullName());
+        feeStatus.put("totalPaid", totalPaid);
+        feeStatus.put("payments", payments);
+        return new ApiResponse("Fee status fetched", true, feeStatus);
+    }
 
     @Override
     public ApiResponse getResults(String studentId) {
@@ -258,9 +264,31 @@ public class StudentServiceImpl implements StudentService {
         return new ApiResponse("Assignment submission progress fetched", true, progress);
     }
 
-	@Override
-	public ApiResponse getStudentDashboard(String studentId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public ApiResponse getStudentDashboard(String studentId) {
+        Student student = getStudent(studentId);
+        Map<String, Object> dashboard = new HashMap<>();
+        dashboard.put("studentId", student.getStudentId());
+        dashboard.put("name", student.getFullName());
+        dashboard.put("class", student.getClassRoom() != null ? student.getClassRoom().getClassName() : "Not Assigned");
+
+        List<Assignment> assignments = assignmentRepository.findByClassRoom(student.getClassRoom());
+        long submitted = assignmentSubmissionRepository.findByStudent(student).stream()
+                .map(AssignmentSubmission::getAssignment).distinct().count();
+        dashboard.put("totalAssignments", assignments.size());
+        dashboard.put("submittedAssignments", submitted);
+        dashboard.put("pendingAssignments", assignments.size() - submitted);
+
+        List<Attendance> attendanceList = attendanceRepository.findByStudent(student);
+        long present = attendanceList.stream()
+                .filter(a -> a.getStatus().toString().equalsIgnoreCase("PRESENT")).count();
+        long total = attendanceList.size();
+        dashboard.put("attendancePercentage",
+                total > 0 ? String.format("%.2f", (present * 100.0 / total)) + "%" : "0%");
+
+        List<FeePayment> payments = feePaymentRepository.findByStudentId(student.getId());
+        dashboard.put("totalFeePaid", payments.stream().mapToDouble(FeePayment::getAmountPaid).sum());
+
+        return new ApiResponse("Student dashboard fetched", true, dashboard);
+    }
 }

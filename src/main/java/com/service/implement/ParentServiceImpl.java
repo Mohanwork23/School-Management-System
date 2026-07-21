@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.dto.ApiResponse;
 import com.dto.AttendanceDTO;
 import com.dto.ResultDTO;
+import com.entity.fees.FeePayment;
 import com.entity.users.Parent;
 import com.entity.users.Student;
 import com.exception.ResourceNotFoundException;
@@ -17,6 +18,7 @@ import com.repository.AttendanceRepository;
 import com.repository.ParentRepository;
 import com.repository.ResultRepository;
 import com.repository.StudentRepository;
+import com.repository.fees.FeePaymentRepository;
 import com.service.ParentService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class ParentServiceImpl implements ParentService {
     private final ResultRepository resultRepository;
     private final AttendanceRepository attendanceRepository;
     private final StudentRepository studentRepository;
+    private final FeePaymentRepository feePaymentRepository;
 
     private Parent getParent(String parentId) {
         return parentRepository.findByParentId(parentId)
@@ -85,27 +88,22 @@ public class ParentServiceImpl implements ParentService {
         return new ApiResponse("Child attendance fetched successfully.", true, allAttendance);
     }
 
-//    @Override
-//    public ApiResponse getChildFeeStatus(String parentId) {
-//        Parent parent = getParent(parentId);
-//        List<Student> children = getChildrenOfParent(parent);
-//
-//        List<FeeInvoiceDTO> allInvoices = children.stream()
-//                .flatMap(student -> feeInvoiceRepository.findByStudent(student).stream()
-//                        .map(invoice -> {
-//                            FeeInvoiceDTO dto = new FeeInvoiceDTO();
-//                            dto.setCategory(invoice.getCategory().getName());
-//                            dto.setAmount(invoice.getTotalAmount());
-//                            dto.setPaid(invoice.isPaid());
-//                            dto.setIssuedDate(invoice.getDueDate().toString());
-//                            dto.setPaidDate(invoice.isPaid() ? invoice.getDueDate() != null ? invoice.getDueDate().toString() : null : null);
-//                            dto.setStudentName(student.getFullName());
-//                            return dto;
-//                        }))
-//                .collect(Collectors.toList());
-//
-//        return new ApiResponse("Child fee status fetched successfully.", true, allInvoices);
-//    }
+    @Override
+    public ApiResponse getChildFeeStatus(String parentId) {
+        Parent parent = getParent(parentId);
+        List<Student> children = getChildrenOfParent(parent);
+        List<Map<String, Object>> feeList = children.stream().map(child -> {
+            List<FeePayment> payments = feePaymentRepository.findByStudentId(child.getId());
+            double totalPaid = payments.stream().mapToDouble(FeePayment::getAmountPaid).sum();
+            Map<String, Object> entry = new HashMap<>();
+            entry.put("studentName", child.getFullName());
+            entry.put("studentId", child.getStudentId());
+            entry.put("totalPaid", totalPaid);
+            entry.put("payments", payments);
+            return entry;
+        }).collect(Collectors.toList());
+        return new ApiResponse("Child fee status fetched", true, feeList);
+    }
 
     @Override
     public ApiResponse getChildResults(String parentId) {

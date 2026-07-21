@@ -96,7 +96,7 @@ See `.github/workflows/maven-ci.yml`
 | Day 1 | 2026-07-19 | Project setup, Spring Boot init, MySQL config, JWT security, Role-based auth |
 | Day 2 | 2026-07-20 | Student & Teacher management APIs, Document upload, CI/CD pipeline setup |
 | Day 3 | 2026-07-21 | Enabled Student fee & timetable APIs, Parent fee status API, Notification entity added |
-| Day 4 | 2026-07-22 | Timetable management, Exam creation, Result entry & grade reports |
+| Day 4 | 2026-07-22 | Notification entity, service & controller added; Student dashboard, fee status & timetable implemented; Parent child fee status implemented |
 | Day 5 | 2026-07-23 | Assignment management, Submission tracking, Parent portal APIs |
 | Day 6 | 2026-07-24 | Email & OTP service, Notification system, Global exception handling |
 | Day 7 | 2026-07-25 | API documentation (Swagger), Code refactoring, Performance improvements |

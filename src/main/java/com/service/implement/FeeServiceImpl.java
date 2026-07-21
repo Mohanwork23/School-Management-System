@@ -16,6 +16,7 @@ import com.repository.fees.FeeComponentRepository;
 import com.repository.fees.FeePaymentRepository;
 import com.repository.fees.FeeStructureRepository;
 import com.service.FeeService;
+import com.service.NotificationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +29,7 @@ public class FeeServiceImpl implements FeeService {
     private final FeePaymentRepository feePaymentRepository;
     private final ClassRoomRepository classRoomRepository;
     private final StudentRepository studentRepository;
+    private final NotificationService notificationService;
 
     @Override
     public ApiResponse createComponent(FeeComponent component) {
@@ -73,6 +75,13 @@ public class FeeServiceImpl implements FeeService {
         payment.setStudent(student);
         payment.setFeeStructure(structure);
         feePaymentRepository.save(payment);
+
+        notificationService.sendNotification(
+            student,
+            "Fee Payment Recorded",
+            "A fee payment of " + payment.getAmountPaid() + " has been recorded for your account.",
+            "FEE"
+        );
 
         return new ApiResponse("Payment added", true, payment);
     }

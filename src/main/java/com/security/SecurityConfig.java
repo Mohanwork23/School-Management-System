@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/student/**").hasRole("STUDENT")
                 .requestMatchers("/api/teacher/**").hasRole("TEACHER")
                 .requestMatchers("/api/parent/**").hasRole("PARENT")
+                .requestMatchers("/api/notifications/**").authenticated()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

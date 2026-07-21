@@ -13,6 +13,7 @@ import com.entity.attendance.*;
 import com.entity.users.*;
 import com.exception.ResourceNotFoundException;
 import com.repository.*;
+import com.service.NotificationService;
 import com.service.TeacherService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class TeacherServiceImpl implements TeacherService {
     private final AttendanceRepository attendanceRepository;
     private final ExamRepository examRepository;
     private final ResultRepository resultRepository;
+    private final NotificationService notificationService;
 
     private Teacher getTeacherByTeacherId(String teacherId) {
         return teacherRepository.findByTeacherId(teacherId)
@@ -79,6 +81,13 @@ public class TeacherServiceImpl implements TeacherService {
             attendance.setStatus(AttendanceStatus.valueOf(entry.getStatus()));
 
             attendanceRepository.save(attendance);
+
+            notificationService.sendNotification(
+                student,
+                "Attendance Marked",
+                "Your attendance for " + date + " has been marked as " + entry.getStatus(),
+                "ATTENDANCE"
+            );
         }
 
         return new ApiResponse("Attendance marked successfully", true);
@@ -148,6 +157,13 @@ public class TeacherServiceImpl implements TeacherService {
         result.setRemarks(dto.getRemarks());
 
         resultRepository.save(result);
+
+        notificationService.sendNotification(
+            student,
+            "Result Published",
+            "Your result for exam has been published. Marks: " + dto.getMarksObtained() + ", Grade: " + dto.getGrade(),
+            "RESULT"
+        );
 
         return new ApiResponse("Result published successfully", true);
     }

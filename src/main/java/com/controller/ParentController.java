@@ -1,5 +1,7 @@
 package com.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,6 +10,7 @@ import com.service.ParentService;
 
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "Parent", description = "Parent portal - view child grades, attendance, fees and results")
 @RestController
 @RequestMapping("/api/parent")
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ public class ParentController {
         return ResponseEntity.ok(parentService.getChildAttendance(parentId));
     }
 
+    @Operation(summary = "Child fee status", description = "Returns fee payment history for all children of this parent")
     @GetMapping("/{parentId}/fees")
     public ResponseEntity<ApiResponse> getChildFeeStatus(@PathVariable String parentId) {
         return ResponseEntity.ok(parentService.getChildFeeStatus(parentId));
@@ -36,6 +40,7 @@ public class ParentController {
         return ResponseEntity.ok(parentService.getChildResults(parentId));
     }
 
+    @Operation(summary = "Parent dashboard", description = "Returns summary of all children linked to this parent")
     @GetMapping("/{parentId}/dashboard")
     public ResponseEntity<ApiResponse> getParentDashboard(@PathVariable String parentId) {
         return ResponseEntity.ok(parentService.getParentDashboard(parentId));

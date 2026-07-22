@@ -1,5 +1,7 @@
 package com.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.Map;
 
@@ -27,6 +29,7 @@ import com.service.AdminService;
 
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "Admin", description = "Admin operations - manage students, teachers, parents, classes and subjects")
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
@@ -36,17 +39,20 @@ public class AdminController {
     private final DocumentRepository documentRepository;
 
 
+    @Operation(summary = "Register student", description = "Register a new student and send welcome email")
     @PostMapping("/register-student")
     public ResponseEntity<ApiResponse> registerStudent(@Valid @RequestBody RegisterStudentDTO dto) {
        // System.out.println("Hello");
         return ResponseEntity.ok(adminService.registerStudent(dto));
     }
 
+    @Operation(summary = "Register teacher", description = "Register a new teacher and send welcome email")
     @PostMapping("/register-teacher")
     public ResponseEntity<ApiResponse> registerTeacher(@Valid @RequestBody RegisterTeacherDTO dto) {
         return ResponseEntity.ok(adminService.registerTeacher(dto));
     }
 
+    @Operation(summary = "Register parent", description = "Register a new parent and send welcome email")
     @PostMapping("/register-parent")
     public ResponseEntity<ApiResponse> registerParent(@Valid @RequestBody RegisterParentDTO dto) {
         return ResponseEntity.ok(adminService.registerParent(dto));
@@ -87,6 +93,7 @@ public class AdminController {
         return ResponseEntity.ok(adminService.createSubject(dto));
     }
 
+    @Operation(summary = "Admin dashboard", description = "Get total counts of students, teachers and classes")
     @GetMapping("/dashboard")
     public ResponseEntity<ApiResponse> getDashboardSummary() {
         return ResponseEntity.ok(adminService.getAdminDashboardSummary());

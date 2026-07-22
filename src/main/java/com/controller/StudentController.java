@@ -1,5 +1,7 @@
 package com.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,6 +10,7 @@ import com.service.StudentService;
 
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "Student", description = "Student portal - grades, attendance, assignments, results and dashboard")
 @RestController
 @RequestMapping("/api/student")
 @RequiredArgsConstructor
@@ -39,11 +42,13 @@ public class StudentController {
         return ResponseEntity.ok(studentService.submitAssignment(studentId, assignmentId, fileUrl));
     }
 
+    @Operation(summary = "Get attendance", description = "Returns full attendance history for the student")
     @GetMapping("/{studentId}/attendance")
     public ResponseEntity<ApiResponse> getAttendance(@PathVariable String studentId) {
         return ResponseEntity.ok(studentService.getAttendanceForStudent(studentId));
     }
 
+    @Operation(summary = "Get fee status", description = "Returns all fee payments made by the student")
     @GetMapping("/{studentId}/fees")
     public ResponseEntity<ApiResponse> getFeeStatus(@PathVariable String studentId) {
         return ResponseEntity.ok(studentService.getFeeStatus(studentId));
@@ -54,11 +59,13 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getResults(studentId));
     }
 
+    @Operation(summary = "Get report card", description = "Returns full report card with grades and attendance summary")
     @GetMapping("/{studentId}/report-card")
     public ResponseEntity<ApiResponse> getReportCard(@PathVariable String studentId) {
         return ResponseEntity.ok(studentService.getReportCard(studentId));
     }
 
+    @Operation(summary = "Get student dashboard", description = "Returns assignment progress, attendance % and fee summary")
     @GetMapping("/{studentId}/dashboard")
     public ResponseEntity<ApiResponse> getStudentDashboard(@PathVariable String studentId) {
         return ResponseEntity.ok(studentService.getStudentDashboard(studentId));

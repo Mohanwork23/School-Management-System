@@ -1,5 +1,7 @@
 package com.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +11,7 @@ import com.service.TeacherService;
 
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "Teacher", description = "Teacher portal - assignments, attendance, grades, timetable and dashboard")
 @RestController
 @RequestMapping("/api/teacher")
 @RequiredArgsConstructor
@@ -17,6 +20,7 @@ public class TeacherController {
 
     private final TeacherService teacherService;
 
+    @Operation(summary = "Post assignment", description = "Create and assign a new assignment to a class")
     @PostMapping("/{teacherId}/assignment")
     public ResponseEntity<ApiResponse> postAssignment(
             @PathVariable String teacherId,
@@ -24,6 +28,7 @@ public class TeacherController {
         return ResponseEntity.ok(teacherService.postAssignment(teacherId, dto));
     }
 
+    @Operation(summary = "Mark attendance", description = "Mark attendance for all students in a class")
     @PostMapping("/{teacherId}/attendance")
     public ResponseEntity<ApiResponse> markAttendance(
             @PathVariable String teacherId,
@@ -61,6 +66,7 @@ public class TeacherController {
         return ResponseEntity.ok(teacherService.getExamsByClass(classId));
     }
 
+    @Operation(summary = "Teacher dashboard", description = "Returns classes, subjects and assignment count for the teacher")
     @GetMapping("/{teacherId}/full-dashboard")
     public ResponseEntity<ApiResponse> getTeacherDashboard(@PathVariable String teacherId) {
         return ResponseEntity.ok(teacherService.getTeacherDashboard(teacherId));

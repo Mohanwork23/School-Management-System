@@ -99,7 +99,7 @@ See `.github/workflows/maven-ci.yml`
 | Day 4 | 2026-07-22 | Notification entity, service & controller added; Student dashboard, fee status & timetable implemented; Parent child fee status implemented |
 | Day 5 | 2026-07-23 | Notification triggers on attendance, result & fee payment; SecurityConfig updated for notifications endpoint |
 | Day 6 | 2026-07-24 | Input validation with @Valid on DTOs, improved GlobalExceptionHandler with field-level validation errors |
-| Day 7 | 2026-07-25 | API documentation (Swagger), Code refactoring, Performance improvements |
+| Day 7 | 2026-07-25 | Swagger @Tag & @Operation on all controllers, JWT Bearer auth in Swagger UI, OpenAPI enhanced with contact info |
 
 ---
 

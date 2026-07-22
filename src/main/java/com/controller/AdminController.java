@@ -1,5 +1,6 @@
 package com.controller;
 
+import jakarta.validation.Valid;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -36,18 +37,18 @@ public class AdminController {
 
 
     @PostMapping("/register-student")
-    public ResponseEntity<ApiResponse> registerStudent(@RequestBody RegisterStudentDTO dto) {
+    public ResponseEntity<ApiResponse> registerStudent(@Valid @RequestBody RegisterStudentDTO dto) {
        // System.out.println("Hello");
         return ResponseEntity.ok(adminService.registerStudent(dto));
     }
 
     @PostMapping("/register-teacher")
-    public ResponseEntity<ApiResponse> registerTeacher(@RequestBody RegisterTeacherDTO dto) {
+    public ResponseEntity<ApiResponse> registerTeacher(@Valid @RequestBody RegisterTeacherDTO dto) {
         return ResponseEntity.ok(adminService.registerTeacher(dto));
     }
 
     @PostMapping("/register-parent")
-    public ResponseEntity<ApiResponse> registerParent(@RequestBody RegisterParentDTO dto) {
+    public ResponseEntity<ApiResponse> registerParent(@Valid @RequestBody RegisterParentDTO dto) {
         return ResponseEntity.ok(adminService.registerParent(dto));
     }
 

@@ -23,6 +23,7 @@ import com.repository.AssignmentSubmissionRepository;
 import com.repository.AttendanceRepository;
 import com.repository.ResultRepository;
 import com.repository.StudentRepository;
+import com.repository.TimeTableEntryRepository;
 import com.repository.fees.FeePaymentRepository;
 import com.service.StudentService;
 
@@ -38,6 +39,7 @@ public class StudentServiceImpl implements StudentService {
     private final AttendanceRepository attendanceRepository;
     private final ResultRepository resultRepository;
     private final FeePaymentRepository feePaymentRepository;
+    private final TimeTableEntryRepository timeTableEntryRepository;
 
     private Student getStudent(String studentId) {
         return studentRepository.findByStudentId(studentId)
@@ -48,8 +50,10 @@ public class StudentServiceImpl implements StudentService {
     public ApiResponse getTimeTableForStudent(String studentId) {
         Student student = getStudent(studentId);
         if (student.getClassRoom() == null)
-            return new ApiResponse("No class assigned", false);
-        return new ApiResponse("Timetable fetched", true, student.getClassRoom());
+            return new ApiResponse("No class assigned to this student", false);
+        Long classId = student.getClassRoom().getId();
+        return new ApiResponse("Timetable fetched", true,
+                timeTableEntryRepository.findByClassRoomIdOrderByDayOfWeekAscPeriodAsc(classId));
     }
 
 //    @Override

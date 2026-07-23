@@ -5,12 +5,15 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.entity.academic.ClassRoom;
 import com.entity.attendance.Attendance;
+import com.entity.attendance.AttendanceStatus;
 import com.entity.users.Student;
 
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
-
-	List<Attendance> findByStudent(Student student);
-	List<Attendance> findByStudentAndDateBetween(Student student, LocalDate startDate, LocalDate endDate);
-
+    List<Attendance> findByStudent(Student student);
+    List<Attendance> findByStudentAndDateBetween(Student student, LocalDate startDate, LocalDate endDate);
+    List<Attendance> findByClassRoom(ClassRoom classRoom);
+    long countByClassRoomAndStatus(ClassRoom classRoom, AttendanceStatus status);
+    long countByClassRoom(ClassRoom classRoom);
 }

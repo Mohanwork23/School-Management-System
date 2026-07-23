@@ -23,14 +23,18 @@ import com.dto.TeacherResponseDTO;
 import com.email.service.EmailService;
 import com.entity.academic.ClassRoom;
 import com.entity.academic.Subject;
+import com.entity.attendance.Attendance;
+import com.entity.attendance.AttendanceStatus;
 import com.entity.enums.Role;
 import com.entity.users.Document;
 import com.entity.users.Parent;
 import com.entity.users.Student;
 import com.entity.users.Teacher;
 import com.entity.users.User;
+import com.repository.AttendanceRepository;
 import com.repository.ClassRoomRepository;
 import com.repository.DocumentRepository;
+import com.repository.fees.FeePaymentRepository;
 import com.repository.ParentRepository;
 import com.repository.StudentRepository;
 import com.repository.SubjectRepository;
@@ -54,6 +58,8 @@ public class AdminServiceImpl implements AdminService {
     private final DocumentRepository documentRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final EmailService emailService;
+    private final AttendanceRepository attendanceRepository;
+    private final FeePaymentRepository feePaymentRepository;
 
     @Override
     public ApiResponse registerStudent(RegisterStudentDTO dto) {
@@ -579,10 +585,70 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-    @Transactional(readOnly = true)
 	public ApiResponse getParentById(Long id) {
-		Parent parent = parentRepository.findById(id) .orElseThrow(() -> new RuntimeException("Parent not found with ID: " + id));
+		Parent parent = parentRepository.findById(id).orElseThrow(() -> new RuntimeException("Parent not found with ID: " + id));
         return new ApiResponse("Parent fetched successfully", true, parent);
 	}
 
+    @Override
+    public ApiResponse getAttendanceSummaryByClass(Long classId) {
+        ClassRoom classRoom = classRoomRepository.findById(classId)
+                .orElseThrow(() -> new RuntimeException("Class not found"));
+        List<Student> students = studentRepository.findByClassRoomId(classId);
+        List<Map<String, Object>> summary = students.stream().map(student -> {
+            List<Attendance> records = attendanceRepository.findByStudent(student);
+            long total = records.size();
+            long present = records.stream()
+                    .filter(a -> a.getStatus() == AttendanceStatus.PRESENT).count();
+            Map<String, Object> entry = new HashMap<>();
+            entry.put("studentId", student.getStudentId());
+            entry.put("name", student.getFullName());
+            entry.put("totalDays", total);
+            entry.put("presentDays", present);
+            entry.put("absentDays", total - present);
+            entry.put("attendancePercentage",
+                    total > 0 ? String.format("%.2f", (present * 100.0 / total)) + "%" : "0%");
+            return entry;
+        }).toList();
+        Map<String, Object> result = new HashMap<>();
+        result.put("class", classRoom.getClassName() + " - " + classRoom.getSection());
+        result.put("students", summary);
+        return new ApiResponse("Attendance summary fetched", true, result);
+    }
+
+    @Override
+    public ApiResponse getFeeCollectionReport() {
+        List<Student> students = studentRepository.findAll();
+        List<Map<String, Object>> report = students.stream().map(student -> {
+            double totalPaid = feePaymentRepository.findByStudentId(student.getId())
+                    .stream().mapToDouble(p -> p.getAmountPaid()).sum();
+            Map<String, Object> entry = new HashMap<>();
+            entry.put("studentId", student.getStudentId());
+            entry.put("name", student.getFullName());
+            entry.put("class", student.getClassRoom() != null ? student.getClassRoom().getClassName() : "N/A");
+            entry.put("totalPaid", totalPaid);
+            return entry;
+        }).toList();
+        double grandTotal = report.stream()
+                .mapToDouble(e -> (double) e.get("totalPaid")).sum();
+        Map<String, Object> result = new HashMap<>();
+        result.put("report", report);
+        result.put("grandTotal", grandTotal);
+        return new ApiResponse("Fee collection report fetched", true, result);
+    }
+
+    @Override
+    public ApiResponse searchStudents(String name, Long classId, Boolean active) {
+        List<Student> students;
+        if (name != null && !name.isBlank()) {
+            students = studentRepository.findByFullNameContainingIgnoreCase(name);
+        } else if (classId != null) {
+            students = studentRepository.findByClassRoomId(classId);
+        } else if (active != null) {
+            students = studentRepository.findByIsActive(active);
+        } else {
+            students = studentRepository.findAll();
+        }
+        return new ApiResponse("Search results", true, students);
+    }
 }

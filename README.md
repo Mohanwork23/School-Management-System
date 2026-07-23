@@ -101,6 +101,7 @@ See `.github/workflows/maven-ci.yml`
 | Day 6 | 2026-07-24 | Input validation with @Valid on DTOs, improved GlobalExceptionHandler with field-level validation errors |
 | Day 7 | 2026-07-25 | Swagger @Tag & @Operation on all controllers, JWT Bearer auth in Swagger UI, OpenAPI enhanced with contact info |
 | Day 8 | 2026-07-26 | Password change API, OTP-based forgot/reset password flow, fixed TimeTableController null pointer bug, fixed student timetable to return actual entries |
+| Day 9 | 2026-07-27 | Admin attendance summary report per class, fee collection report, student search by name/class/status |
 
 ---
 

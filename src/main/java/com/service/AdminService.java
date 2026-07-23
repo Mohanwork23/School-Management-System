@@ -41,6 +41,8 @@ public interface AdminService {
 	ApiResponse getTeacherDocuments(Long teacherId);
 	ApiResponse assignSubjectToTeacher(Long teacherId, Long subjectId);
 	ApiResponse getParentById(Long id);
-
+    ApiResponse getAttendanceSummaryByClass(Long classId);
+    ApiResponse getFeeCollectionReport();
+    ApiResponse searchStudents(String name, Long classId, Boolean active);
 
 }

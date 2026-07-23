@@ -210,11 +210,31 @@ public class AdminController {
     ) {
         return ResponseEntity.ok(adminService.assignSubjectToTeacher(teacherId, subjectId));
     }
+    @Operation(summary = "Get parent by ID")
     @GetMapping("/parents/{id}")
     public ResponseEntity<ApiResponse> getParentById(@PathVariable Long id) {
         return ResponseEntity.ok(adminService.getParentById(id));
     }
 
+    @Operation(summary = "Attendance summary by class", description = "Returns per-student attendance stats for a class")
+    @GetMapping("/reports/attendance/{classId}")
+    public ResponseEntity<ApiResponse> getAttendanceSummary(@PathVariable Long classId) {
+        return ResponseEntity.ok(adminService.getAttendanceSummaryByClass(classId));
+    }
 
+    @Operation(summary = "Fee collection report", description = "Returns total fees paid per student across all classes")
+    @GetMapping("/reports/fees")
+    public ResponseEntity<ApiResponse> getFeeCollectionReport() {
+        return ResponseEntity.ok(adminService.getFeeCollectionReport());
+    }
+
+    @Operation(summary = "Search students", description = "Search students by name, classId or active status")
+    @GetMapping("/students/search")
+    public ResponseEntity<ApiResponse> searchStudents(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long classId,
+            @RequestParam(required = false) Boolean active) {
+        return ResponseEntity.ok(adminService.searchStudents(name, classId, active));
+    }
 
 }

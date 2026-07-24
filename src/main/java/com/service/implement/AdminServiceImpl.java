@@ -22,6 +22,8 @@ import com.dto.SubjectDTO;
 import com.dto.TeacherResponseDTO;
 import com.email.service.EmailService;
 import com.entity.academic.ClassRoom;
+import com.entity.academic.Exam;
+import com.entity.academic.Result;
 import com.entity.academic.Subject;
 import com.entity.attendance.Attendance;
 import com.entity.attendance.AttendanceStatus;
@@ -34,6 +36,8 @@ import com.entity.users.User;
 import com.repository.AttendanceRepository;
 import com.repository.ClassRoomRepository;
 import com.repository.DocumentRepository;
+import com.repository.ExamRepository;
+import com.repository.ResultRepository;
 import com.repository.fees.FeePaymentRepository;
 import com.repository.ParentRepository;
 import com.repository.StudentRepository;
@@ -60,6 +64,8 @@ public class AdminServiceImpl implements AdminService {
     private final EmailService emailService;
     private final AttendanceRepository attendanceRepository;
     private final FeePaymentRepository feePaymentRepository;
+    private final ExamRepository examRepository;
+    private final ResultRepository resultRepository;
 
     @Override
     public ApiResponse registerStudent(RegisterStudentDTO dto) {
@@ -650,5 +656,71 @@ public class AdminServiceImpl implements AdminService {
             students = studentRepository.findAll();
         }
         return new ApiResponse("Search results", true, students);
+    }
+
+    @Override
+    public ApiResponse getExamScheduleByClass(Long classId) {
+        ClassRoom classRoom = classRoomRepository.findById(classId)
+                .orElseThrow(() -> new RuntimeException("Class not found"));
+        List<Exam> exams = examRepository.findByClassRoomIdOrderByExamDateAsc(classId);
+        List<Map<String, Object>> schedule = exams.stream().map(exam -> {
+            Map<String, Object> entry = new HashMap<>();
+            entry.put("examId", exam.getId());
+            entry.put("title", exam.getTitle());
+            entry.put("subject", exam.getSubject() != null ? exam.getSubject().getName() : "N/A");
+            entry.put("date", exam.getExamDate());
+            entry.put("term", exam.getTerm());
+            entry.put("academicYear", exam.getAcademicYear());
+            return entry;
+        }).toList();
+        Map<String, Object> result = new HashMap<>();
+        result.put("class", classRoom.getClassName() + " - " + classRoom.getSection());
+        result.put("exams", schedule);
+        return new ApiResponse("Exam schedule fetched", true, result);
+    }
+
+    @Override
+    public ApiResponse getResultSummaryByTerm(String studentId, String term) {
+        Student student = studentRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+        List<Result> results = resultRepository.findByStudentAndExam_Term(student, term);
+        if (results.isEmpty())
+            return new ApiResponse("No results found for term: " + term, false);
+        double total = results.stream().mapToDouble(r -> r.getMarksObtained() != null ? r.getMarksObtained() : 0).sum();
+        double average = total / results.size();
+        long passed = results.stream().filter(r -> r.getMarksObtained() != null && r.getMarksObtained() >= 35).count();
+        List<Map<String, Object>> details = results.stream().map(r -> {
+            Map<String, Object> entry = new HashMap<>();
+            entry.put("subject", r.getExam().getSubject() != null ? r.getExam().getSubject().getName() : "N/A");
+            entry.put("examTitle", r.getExam().getTitle());
+            entry.put("marks", r.getMarksObtained());
+            entry.put("grade", r.getGrade());
+            entry.put("status", r.getMarksObtained() != null && r.getMarksObtained() >= 35 ? "PASS" : "FAIL");
+            return entry;
+        }).toList();
+        Map<String, Object> summary = new HashMap<>();
+        summary.put("studentId", studentId);
+        summary.put("name", student.getFullName());
+        summary.put("term", term);
+        summary.put("totalMarks", total);
+        summary.put("average", String.format("%.2f", average));
+        summary.put("passed", passed);
+        summary.put("failed", results.size() - passed);
+        summary.put("results", details);
+        return new ApiResponse("Result summary fetched", true, summary);
+    }
+
+    @Override
+    public ApiResponse searchTeachers(String name, String department) {
+        List<Teacher> teachers;
+        if (name != null && !name.isBlank()) {
+            teachers = teacherRepository.findByFullNameContainingIgnoreCase(name);
+        } else if (department != null && !department.isBlank()) {
+            teachers = teacherRepository.findByDepartmentIgnoreCase(department);
+        } else {
+            teachers = teacherRepository.findAll();
+        }
+        List<TeacherResponseDTO> dtos = teachers.stream().map(this::mapToDTO).toList();
+        return new ApiResponse("Teacher search results", true, dtos);
     }
 }

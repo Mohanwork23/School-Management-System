@@ -8,7 +8,7 @@ import com.entity.academic.ClassRoom;
 import com.entity.academic.Exam;
 
 public interface ExamRepository extends JpaRepository<Exam, Long> {
-
-	List<Exam> findByClassRoom(ClassRoom classRoom);
-
+    List<Exam> findByClassRoom(ClassRoom classRoom);
+    List<Exam> findByClassRoomIdOrderByExamDateAsc(Long classRoomId);
+    List<Exam> findByClassRoomIdAndTerm(Long classRoomId, String term);
 }

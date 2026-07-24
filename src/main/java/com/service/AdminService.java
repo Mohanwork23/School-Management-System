@@ -44,5 +44,7 @@ public interface AdminService {
     ApiResponse getAttendanceSummaryByClass(Long classId);
     ApiResponse getFeeCollectionReport();
     ApiResponse searchStudents(String name, Long classId, Boolean active);
-
+    ApiResponse getExamScheduleByClass(Long classId);
+    ApiResponse getResultSummaryByTerm(String studentId, String term);
+    ApiResponse searchTeachers(String name, String department);
 }

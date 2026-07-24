@@ -237,4 +237,26 @@ public class AdminController {
         return ResponseEntity.ok(adminService.searchStudents(name, classId, active));
     }
 
+    @Operation(summary = "Exam schedule by class", description = "Returns upcoming exams ordered by date for a class")
+    @GetMapping("/reports/exams/{classId}")
+    public ResponseEntity<ApiResponse> getExamSchedule(@PathVariable Long classId) {
+        return ResponseEntity.ok(adminService.getExamScheduleByClass(classId));
+    }
+
+    @Operation(summary = "Result summary by term", description = "Returns total marks, average, pass/fail count for a student per term")
+    @GetMapping("/reports/results/{studentId}")
+    public ResponseEntity<ApiResponse> getResultSummary(
+            @PathVariable String studentId,
+            @RequestParam String term) {
+        return ResponseEntity.ok(adminService.getResultSummaryByTerm(studentId, term));
+    }
+
+    @Operation(summary = "Search teachers", description = "Search teachers by name or department")
+    @GetMapping("/teachers/search")
+    public ResponseEntity<ApiResponse> searchTeachers(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String department) {
+        return ResponseEntity.ok(adminService.searchTeachers(name, department));
+    }
+
 }

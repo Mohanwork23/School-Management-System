@@ -47,4 +47,5 @@ public interface AdminService {
     ApiResponse getExamScheduleByClass(Long classId);
     ApiResponse getResultSummaryByTerm(String studentId, String term);
     ApiResponse searchTeachers(String name, String department);
+    ApiResponse getClassWiseStudentCount();
 }

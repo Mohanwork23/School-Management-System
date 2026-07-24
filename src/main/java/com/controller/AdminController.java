@@ -259,4 +259,10 @@ public class AdminController {
         return ResponseEntity.ok(adminService.searchTeachers(name, department));
     }
 
+    @Operation(summary = "Class-wise student count", description = "Returns number of students in each class")
+    @GetMapping("/reports/class-count")
+    public ResponseEntity<ApiResponse> getClassWiseStudentCount() {
+        return ResponseEntity.ok(adminService.getClassWiseStudentCount());
+    }
+
 }

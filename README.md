@@ -103,6 +103,7 @@ See `.github/workflows/maven-ci.yml`
 | Day 8 | 2026-07-26 | Password change API, OTP-based forgot/reset password flow, fixed TimeTableController null pointer bug, fixed student timetable to return actual entries |
 | Day 9 | 2026-07-27 | Admin attendance summary report per class, fee collection report, student search by name/class/status |
 | Day 10 | 2026-07-28 | Exam schedule by class, result summary per term with pass/fail stats, teacher search by name/department |
+| Day 11 | 2026-07-29 | Parent child timetable & upcoming assignments APIs, admin class-wise student count report |
 
 ---
 

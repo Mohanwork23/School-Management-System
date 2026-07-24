@@ -9,4 +9,6 @@ public interface ParentService {
     ApiResponse getChildResults(String parentId);
     ApiResponse getParentDashboard(String parentId);
     ApiResponse getParentProfile(String parentId);
+    ApiResponse getChildTimetable(String parentId);
+    ApiResponse getChildUpcomingAssignments(String parentId);
 }

@@ -723,4 +723,18 @@ public class AdminServiceImpl implements AdminService {
         List<TeacherResponseDTO> dtos = teachers.stream().map(this::mapToDTO).toList();
         return new ApiResponse("Teacher search results", true, dtos);
     }
+
+    @Override
+    public ApiResponse getClassWiseStudentCount() {
+        List<ClassRoom> classes = classRoomRepository.findAll();
+        List<Map<String, Object>> report = classes.stream().map(c -> {
+            long count = studentRepository.findByClassRoomId(c.getId()).size();
+            Map<String, Object> entry = new HashMap<>();
+            entry.put("classId", c.getId());
+            entry.put("className", c.getClassName() + " - " + c.getSection());
+            entry.put("studentCount", count);
+            return entry;
+        }).toList();
+        return new ApiResponse("Class-wise student count fetched", true, report);
+    }
 }

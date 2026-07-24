@@ -51,7 +51,15 @@ public class ParentController {
         return ResponseEntity.ok(parentService.getParentProfile(parentId));
     }
 
-    // For Razorpay payment integration:
-    // @PostMapping("/{parentId}/pay-fee")
-    // public ResponseEntity<ApiResponse> payFees(...) { ... }
+    @Operation(summary = "Child timetable", description = "Returns timetable for all children of this parent")
+    @GetMapping("/{parentId}/timetable")
+    public ResponseEntity<ApiResponse> getChildTimetable(@PathVariable String parentId) {
+        return ResponseEntity.ok(parentService.getChildTimetable(parentId));
+    }
+
+    @Operation(summary = "Child upcoming assignments", description = "Returns upcoming assignment deadlines for all children")
+    @GetMapping("/{parentId}/upcoming-assignments")
+    public ResponseEntity<ApiResponse> getChildUpcomingAssignments(@PathVariable String parentId) {
+        return ResponseEntity.ok(parentService.getChildUpcomingAssignments(parentId));
+    }
 }

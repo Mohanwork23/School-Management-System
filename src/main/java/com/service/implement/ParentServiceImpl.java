@@ -10,14 +10,18 @@ import org.springframework.stereotype.Service;
 import com.dto.ApiResponse;
 import com.dto.AttendanceDTO;
 import com.dto.ResultDTO;
+import com.entity.academic.Assignment;
+import com.entity.academic.TimeTableEntry;
 import com.entity.fees.FeePayment;
 import com.entity.users.Parent;
 import com.entity.users.Student;
 import com.exception.ResourceNotFoundException;
+import com.repository.AssignmentRepository;
 import com.repository.AttendanceRepository;
 import com.repository.ParentRepository;
 import com.repository.ResultRepository;
 import com.repository.StudentRepository;
+import com.repository.TimeTableEntryRepository;
 import com.repository.fees.FeePaymentRepository;
 import com.service.ParentService;
 
@@ -32,6 +36,8 @@ public class ParentServiceImpl implements ParentService {
     private final AttendanceRepository attendanceRepository;
     private final StudentRepository studentRepository;
     private final FeePaymentRepository feePaymentRepository;
+    private final TimeTableEntryRepository timeTableEntryRepository;
+    private final AssignmentRepository assignmentRepository;
 
     private Parent getParent(String parentId) {
         return parentRepository.findByParentId(parentId)
@@ -156,7 +162,55 @@ public class ParentServiceImpl implements ParentService {
         profile.put("address", parent.getAddress());
         profile.put("gender", parent.getGender());
         profile.put("role", parent.getRole().name());
-
         return new ApiResponse("Parent profile fetched successfully.", true, profile);
+    }
+
+    @Override
+    public ApiResponse getChildTimetable(String parentId) {
+        Parent parent = getParent(parentId);
+        List<Student> children = getChildrenOfParent(parent);
+        List<Map<String, Object>> result = children.stream().map(child -> {
+            Map<String, Object> entry = new HashMap<>();
+            entry.put("studentId", child.getStudentId());
+            entry.put("name", child.getFullName());
+            if (child.getClassRoom() != null) {
+                List<TimeTableEntry> slots = timeTableEntryRepository
+                        .findByClassRoomIdOrderByDayOfWeekAscPeriodAsc(child.getClassRoom().getId());
+                entry.put("timetable", slots);
+            } else {
+                entry.put("timetable", List.of());
+            }
+            return entry;
+        }).collect(Collectors.toList());
+        return new ApiResponse("Child timetable fetched", true, result);
+    }
+
+    @Override
+    public ApiResponse getChildUpcomingAssignments(String parentId) {
+        Parent parent = getParent(parentId);
+        List<Student> children = getChildrenOfParent(parent);
+        List<Map<String, Object>> result = children.stream().map(child -> {
+            Map<String, Object> entry = new HashMap<>();
+            entry.put("studentId", child.getStudentId());
+            entry.put("name", child.getFullName());
+            if (child.getClassRoom() != null) {
+                List<Assignment> upcoming = assignmentRepository
+                        .findByClassRoomAndDueDateAfterOrderByDueDateAsc(
+                                child.getClassRoom(), java.time.LocalDateTime.now());
+                List<Map<String, Object>> assignments = upcoming.stream().map(a -> {
+                    Map<String, Object> aMap = new HashMap<>();
+                    aMap.put("title", a.getTitle());
+                    aMap.put("subject", a.getSubject() != null ? a.getSubject().getName() : "N/A");
+                    aMap.put("dueDate", a.getDueDate());
+                    aMap.put("description", a.getDescription());
+                    return aMap;
+                }).collect(Collectors.toList());
+                entry.put("assignments", assignments);
+            } else {
+                entry.put("assignments", List.of());
+            }
+            return entry;
+        }).collect(Collectors.toList());
+        return new ApiResponse("Upcoming assignments fetched", true, result);
     }
 }

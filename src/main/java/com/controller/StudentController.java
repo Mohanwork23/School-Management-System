@@ -82,4 +82,10 @@ public class StudentController {
     public ResponseEntity<ApiResponse> getUpcomingExams(@PathVariable String studentId) {
         return ResponseEntity.ok(studentService.getUpcomingExams(studentId));
     }
+
+    @Operation(summary = "Get student profile", description = "Returns full profile of a student")
+    @GetMapping("/{studentId}/profile")
+    public ResponseEntity<ApiResponse> getStudentProfile(@PathVariable String studentId) {
+        return ResponseEntity.ok(studentService.getStudentProfile(studentId));
+    }
 }

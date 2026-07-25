@@ -49,4 +49,8 @@ public interface AdminService {
     ApiResponse searchTeachers(String name, String department);
     ApiResponse getClassWiseStudentCount();
     ApiResponse getSubjectWiseResultAnalysis(Long classId);
+    ApiResponse deleteStudent(Long id);
+    ApiResponse deleteTeacher(Long id);
+    ApiResponse updateClass(Long classId, String className, String section);
+    ApiResponse getStudentProfile(String studentId);
 }

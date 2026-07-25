@@ -771,4 +771,47 @@ public class AdminServiceImpl implements AdminService {
         }).toList();
         return new ApiResponse("Subject-wise result analysis fetched", true, analysis);
     }
+
+    @Override
+    public ApiResponse deleteStudent(Long id) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found with ID: " + id));
+        studentRepository.delete(student);
+        return new ApiResponse("Student deleted successfully", true);
+    }
+
+    @Override
+    public ApiResponse deleteTeacher(Long id) {
+        Teacher teacher = teacherRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Teacher not found with ID: " + id));
+        teacherRepository.delete(teacher);
+        return new ApiResponse("Teacher deleted successfully", true);
+    }
+
+    @Override
+    public ApiResponse updateClass(Long classId, String className, String section) {
+        ClassRoom classRoom = classRoomRepository.findById(classId)
+                .orElseThrow(() -> new RuntimeException("Class not found with ID: " + classId));
+        if (className != null && !className.isBlank()) classRoom.setClassName(className);
+        if (section != null && !section.isBlank()) classRoom.setSection(section);
+        classRoomRepository.save(classRoom);
+        return new ApiResponse("Class updated successfully", true, classRoom);
+    }
+
+    @Override
+    public ApiResponse getStudentProfile(String studentId) {
+        Student student = studentRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found with ID: " + studentId));
+        Map<String, Object> profile = new HashMap<>();
+        profile.put("studentId", student.getStudentId());
+        profile.put("name", student.getFullName());
+        profile.put("email", student.getEmail());
+        profile.put("phone", student.getPhone());
+        profile.put("gender", student.getGender());
+        profile.put("dob", student.getDateOfBirth());
+        profile.put("class", student.getClassRoom() != null ? student.getClassRoom().getClassName() + " - " + student.getClassRoom().getSection() : "Not Assigned");
+        profile.put("parent", student.getParent() != null ? student.getParent().getFullName() : "Not Linked");
+        profile.put("active", student.isActive());
+        return new ApiResponse("Student profile fetched", true, profile);
+    }
 }

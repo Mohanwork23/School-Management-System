@@ -271,4 +271,25 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getSubjectWiseResultAnalysis(classId));
     }
 
+    @Operation(summary = "Delete student")
+    @DeleteMapping("/students/{id}")
+    public ResponseEntity<ApiResponse> deleteStudent(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.deleteStudent(id));
+    }
+
+    @Operation(summary = "Delete teacher")
+    @DeleteMapping("/teachers/{id}")
+    public ResponseEntity<ApiResponse> deleteTeacher(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.deleteTeacher(id));
+    }
+
+    @Operation(summary = "Update class", description = "Update class name or section")
+    @PutMapping("/classes/{classId}")
+    public ResponseEntity<ApiResponse> updateClass(
+            @PathVariable Long classId,
+            @RequestParam(required = false) String className,
+            @RequestParam(required = false) String section) {
+        return ResponseEntity.ok(adminService.updateClass(classId, className, section));
+    }
+
 }

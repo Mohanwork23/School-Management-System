@@ -291,6 +291,22 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public ApiResponse getStudentProfile(String studentId) {
+        Student student = getStudent(studentId);
+        Map<String, Object> profile = new HashMap<>();
+        profile.put("studentId", student.getStudentId());
+        profile.put("name", student.getFullName());
+        profile.put("email", student.getEmail());
+        profile.put("phone", student.getPhone());
+        profile.put("gender", student.getGender());
+        profile.put("dob", student.getDateOfBirth());
+        profile.put("class", student.getClassRoom() != null ?
+                student.getClassRoom().getClassName() + " - " + student.getClassRoom().getSection() : "Not Assigned");
+        profile.put("active", student.isActive());
+        return new ApiResponse("Student profile fetched", true, profile);
+    }
+
+    @Override
     public ApiResponse getStudentDashboard(String studentId) {
         Student student = getStudent(studentId);
         Map<String, Object> dashboard = new HashMap<>();

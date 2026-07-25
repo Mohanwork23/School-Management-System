@@ -105,6 +105,7 @@ See `.github/workflows/maven-ci.yml`
 | Day 10 | 2026-07-28 | Exam schedule by class, result summary per term with pass/fail stats, teacher search by name/department |
 | Day 11 | 2026-07-29 | Parent child timetable & upcoming assignments APIs, admin class-wise student count report |
 | Day 12 | 2026-07-30 | Student upcoming exams, teacher assignment submission tracker, admin subject-wise result analysis |
+| Day 13 | 2026-07-31 | Admin delete student/teacher, update class, student profile view API |
 
 ---
 

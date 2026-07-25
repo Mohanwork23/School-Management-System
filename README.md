@@ -104,6 +104,7 @@ See `.github/workflows/maven-ci.yml`
 | Day 9 | 2026-07-27 | Admin attendance summary report per class, fee collection report, student search by name/class/status |
 | Day 10 | 2026-07-28 | Exam schedule by class, result summary per term with pass/fail stats, teacher search by name/department |
 | Day 11 | 2026-07-29 | Parent child timetable & upcoming assignments APIs, admin class-wise student count report |
+| Day 12 | 2026-07-30 | Student upcoming exams, teacher assignment submission tracker, admin subject-wise result analysis |
 
 ---
 

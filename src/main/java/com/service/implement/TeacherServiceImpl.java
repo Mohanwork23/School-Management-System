@@ -24,6 +24,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final AssignmentRepository assignmentRepository;
+    private final AssignmentSubmissionRepository assignmentSubmissionRepository;
     private final ClassRoomRepository classRoomRepository;
     private final SubjectRepository subjectRepository;
     private final StudentRepository studentRepository;
@@ -203,5 +204,35 @@ public class TeacherServiceImpl implements TeacherService {
         dashboard.put("assignmentsGiven", assignmentCount);
 
         return new ApiResponse("Teacher dashboard fetched", true, dashboard);
+    }
+
+    @Override
+    public ApiResponse getAssignmentSubmissionTracker(String teacherId, Long assignmentId) {
+        getTeacherByTeacherId(teacherId);
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+        List<Student> allStudents = studentRepository.findByClassRoomId(assignment.getClassRoom().getId());
+        List<AssignmentSubmission> submissions = assignmentSubmissionRepository.findByAssignment(assignment);
+        List<String> submittedIds = submissions.stream()
+                .map(s -> s.getStudent().getStudentId()).collect(Collectors.toList());
+        List<Map<String, Object>> tracker = allStudents.stream().map(student -> {
+            Map<String, Object> entry = new HashMap<>();
+            entry.put("studentId", student.getStudentId());
+            entry.put("name", student.getFullName());
+            entry.put("submitted", submittedIds.contains(student.getStudentId()));
+            submissions.stream()
+                    .filter(s -> s.getStudent().getStudentId().equals(student.getStudentId()))
+                    .findFirst()
+                    .ifPresent(s -> entry.put("submittedAt", s.getSubmittedAt()));
+            return entry;
+        }).collect(Collectors.toList());
+        Map<String, Object> result = new HashMap<>();
+        result.put("assignmentTitle", assignment.getTitle());
+        result.put("dueDate", assignment.getDueDate());
+        result.put("totalStudents", allStudents.size());
+        result.put("submittedCount", submittedIds.size());
+        result.put("pendingCount", allStudents.size() - submittedIds.size());
+        result.put("tracker", tracker);
+        return new ApiResponse("Submission tracker fetched", true, result);
     }
 }

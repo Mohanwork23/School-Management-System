@@ -71,4 +71,12 @@ public class TeacherController {
     public ResponseEntity<ApiResponse> getTeacherDashboard(@PathVariable String teacherId) {
         return ResponseEntity.ok(teacherService.getTeacherDashboard(teacherId));
     }
+
+    @Operation(summary = "Assignment submission tracker", description = "Returns who submitted and who hasn't for a given assignment")
+    @GetMapping("/{teacherId}/assignment-tracker/{assignmentId}")
+    public ResponseEntity<ApiResponse> getSubmissionTracker(
+            @PathVariable String teacherId,
+            @PathVariable Long assignmentId) {
+        return ResponseEntity.ok(teacherService.getAssignmentSubmissionTracker(teacherId, assignmentId));
+    }
 }

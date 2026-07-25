@@ -48,4 +48,5 @@ public interface AdminService {
     ApiResponse getResultSummaryByTerm(String studentId, String term);
     ApiResponse searchTeachers(String name, String department);
     ApiResponse getClassWiseStudentCount();
+    ApiResponse getSubjectWiseResultAnalysis(Long classId);
 }

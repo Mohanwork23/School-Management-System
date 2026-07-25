@@ -737,4 +737,38 @@ public class AdminServiceImpl implements AdminService {
         }).toList();
         return new ApiResponse("Class-wise student count fetched", true, report);
     }
+
+    @Override
+    public ApiResponse getSubjectWiseResultAnalysis(Long classId) {
+        ClassRoom classRoom = classRoomRepository.findById(classId)
+                .orElseThrow(() -> new RuntimeException("Class not found"));
+        List<Exam> exams = examRepository.findByClassRoom(classRoom);
+        Map<String, List<Double>> subjectMarks = new HashMap<>();
+        for (Exam exam : exams) {
+            String subjectName = exam.getSubject() != null ? exam.getSubject().getName() : "Unknown";
+            List<Result> results = resultRepository.findByExam(exam);
+            results.stream()
+                    .filter(r -> r.getMarksObtained() != null)
+                    .forEach(r -> subjectMarks
+                            .computeIfAbsent(subjectName, k -> new ArrayList<>())
+                            .add(r.getMarksObtained()));
+        }
+        List<Map<String, Object>> analysis = subjectMarks.entrySet().stream().map(entry -> {
+            List<Double> marks = entry.getValue();
+            double avg = marks.stream().mapToDouble(Double::doubleValue).average().orElse(0);
+            double highest = marks.stream().mapToDouble(Double::doubleValue).max().orElse(0);
+            double lowest = marks.stream().mapToDouble(Double::doubleValue).min().orElse(0);
+            long passed = marks.stream().filter(m -> m >= 35).count();
+            Map<String, Object> row = new HashMap<>();
+            row.put("subject", entry.getKey());
+            row.put("average", String.format("%.2f", avg));
+            row.put("highest", highest);
+            row.put("lowest", lowest);
+            row.put("totalStudents", marks.size());
+            row.put("passed", passed);
+            row.put("failed", marks.size() - passed);
+            return row;
+        }).toList();
+        return new ApiResponse("Subject-wise result analysis fetched", true, analysis);
+    }
 }

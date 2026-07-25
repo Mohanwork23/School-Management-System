@@ -265,4 +265,10 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getClassWiseStudentCount());
     }
 
+    @Operation(summary = "Subject-wise result analysis", description = "Returns average, highest, lowest marks and pass/fail per subject for a class")
+    @GetMapping("/reports/subject-analysis/{classId}")
+    public ResponseEntity<ApiResponse> getSubjectWiseResultAnalysis(@PathVariable Long classId) {
+        return ResponseEntity.ok(adminService.getSubjectWiseResultAnalysis(classId));
+    }
+
 }

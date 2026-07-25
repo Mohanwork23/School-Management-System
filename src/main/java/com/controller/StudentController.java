@@ -71,8 +71,15 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getStudentDashboard(studentId));
     }
 
+    @Operation(summary = "Get assignment submission progress")
     @GetMapping("/{studentId}/assignment-progress")
     public ResponseEntity<ApiResponse> getAssignmentSubmissionProgress(@PathVariable String studentId) {
         return ResponseEntity.ok(studentService.getAssignmentSubmissionProgress(studentId));
+    }
+
+    @Operation(summary = "Get upcoming exams", description = "Returns upcoming exams for the student's class")
+    @GetMapping("/{studentId}/upcoming-exams")
+    public ResponseEntity<ApiResponse> getUpcomingExams(@PathVariable String studentId) {
+        return ResponseEntity.ok(studentService.getUpcomingExams(studentId));
     }
 }

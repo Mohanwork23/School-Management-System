@@ -13,4 +13,5 @@ public interface StudentService {
     ApiResponse getReportCard(String studentId);
     ApiResponse getStudentDashboard(String studentId);
     ApiResponse getAssignmentSubmissionProgress(String studentId);
+    ApiResponse getUpcomingExams(String studentId);
 }

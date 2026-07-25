@@ -21,6 +21,7 @@ import com.exception.ResourceNotFoundException;
 import com.repository.AssignmentRepository;
 import com.repository.AssignmentSubmissionRepository;
 import com.repository.AttendanceRepository;
+import com.repository.ExamRepository;
 import com.repository.ResultRepository;
 import com.repository.StudentRepository;
 import com.repository.TimeTableEntryRepository;
@@ -40,6 +41,7 @@ public class StudentServiceImpl implements StudentService {
     private final ResultRepository resultRepository;
     private final FeePaymentRepository feePaymentRepository;
     private final TimeTableEntryRepository timeTableEntryRepository;
+    private final ExamRepository examRepository;
 
     private Student getStudent(String studentId) {
         return studentRepository.findByStudentId(studentId)
@@ -266,6 +268,26 @@ public class StudentServiceImpl implements StudentService {
                 totalAssignments > 0 ? String.format("%.2f", (submittedAssignments * 100.0 / totalAssignments)) + "%" : "0%");
 
         return new ApiResponse("Assignment submission progress fetched", true, progress);
+    }
+
+    @Override
+    public ApiResponse getUpcomingExams(String studentId) {
+        Student student = getStudent(studentId);
+        if (student.getClassRoom() == null)
+            return new ApiResponse("No class assigned", false);
+        List<com.entity.academic.Exam> exams = examRepository
+                .findByClassRoomIdOrderByExamDateAsc(student.getClassRoom().getId());
+        List<Map<String, Object>> upcoming = exams.stream()
+                .filter(e -> e.getExamDate() != null && !e.getExamDate().isBefore(java.time.LocalDate.now()))
+                .map(e -> {
+                    Map<String, Object> entry = new HashMap<>();
+                    entry.put("title", e.getTitle());
+                    entry.put("subject", e.getSubject() != null ? e.getSubject().getName() : "N/A");
+                    entry.put("date", e.getExamDate());
+                    entry.put("term", e.getTerm());
+                    return entry;
+                }).collect(Collectors.toList());
+        return new ApiResponse("Upcoming exams fetched", true, upcoming);
     }
 
     @Override

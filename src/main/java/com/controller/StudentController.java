@@ -83,9 +83,12 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getUpcomingExams(studentId));
     }
 
-    @Operation(summary = "Get student profile", description = "Returns full profile of a student")
-    @GetMapping("/{studentId}/profile")
-    public ResponseEntity<ApiResponse> getStudentProfile(@PathVariable String studentId) {
-        return ResponseEntity.ok(studentService.getStudentProfile(studentId));
+    @Operation(summary = "Change password", description = "Student self-service password change")
+    @PutMapping("/{studentId}/change-password")
+    public ResponseEntity<ApiResponse> changePassword(
+            @PathVariable String studentId,
+            @RequestBody java.util.Map<String, String> body) {
+        return ResponseEntity.ok(studentService.changePassword(
+                studentId, body.get("oldPassword"), body.get("newPassword")));
     }
 }

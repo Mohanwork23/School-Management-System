@@ -79,4 +79,10 @@ public class TeacherController {
             @PathVariable Long assignmentId) {
         return ResponseEntity.ok(teacherService.getAssignmentSubmissionTracker(teacherId, assignmentId));
     }
+
+    @Operation(summary = "Teacher profile", description = "Returns full profile of a teacher")
+    @GetMapping("/{teacherId}/profile")
+    public ResponseEntity<ApiResponse> getTeacherProfile(@PathVariable String teacherId) {
+        return ResponseEntity.ok(teacherService.getTeacherProfile(teacherId));
+    }
 }

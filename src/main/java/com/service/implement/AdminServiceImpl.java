@@ -814,4 +814,19 @@ public class AdminServiceImpl implements AdminService {
         profile.put("active", student.isActive());
         return new ApiResponse("Student profile fetched", true, profile);
     }
+
+    @Override
+    public ApiResponse getEnhancedDashboard() {
+        Map<String, Object> dashboard = new HashMap<>();
+        dashboard.put("totalStudents", studentRepository.count());
+        dashboard.put("totalTeachers", teacherRepository.count());
+        dashboard.put("totalClasses", classRoomRepository.count());
+        dashboard.put("totalSubjects", subjectRepository.count());
+        dashboard.put("totalParents", parentRepository.count());
+        dashboard.put("totalExams", examRepository.count());
+        double totalFeesCollected = feePaymentRepository.findAll()
+                .stream().mapToDouble(p -> p.getAmountPaid()).sum();
+        dashboard.put("totalFeesCollected", totalFeesCollected);
+        return new ApiResponse("Enhanced dashboard fetched", true, dashboard);
+    }
 }

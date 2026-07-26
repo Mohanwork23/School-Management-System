@@ -15,4 +15,5 @@ public interface StudentService {
     ApiResponse getAssignmentSubmissionProgress(String studentId);
     ApiResponse getUpcomingExams(String studentId);
     ApiResponse getStudentProfile(String studentId);
+    ApiResponse changePassword(String studentId, String oldPassword, String newPassword);
 }

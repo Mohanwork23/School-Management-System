@@ -307,6 +307,18 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public ApiResponse changePassword(String studentId, String oldPassword, String newPassword) {
+        Student student = getStudent(studentId);
+        org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder encoder =
+                new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+        if (!encoder.matches(oldPassword, student.getPassword()))
+            return new ApiResponse("Old password is incorrect", false);
+        student.setPassword(encoder.encode(newPassword));
+        studentRepository.save(student);
+        return new ApiResponse("Password changed successfully", true);
+    }
+
+    @Override
     public ApiResponse getStudentDashboard(String studentId) {
         Student student = getStudent(studentId);
         Map<String, Object> dashboard = new HashMap<>();

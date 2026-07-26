@@ -53,4 +53,5 @@ public interface AdminService {
     ApiResponse deleteTeacher(Long id);
     ApiResponse updateClass(Long classId, String className, String section);
     ApiResponse getStudentProfile(String studentId);
+    ApiResponse getEnhancedDashboard();
 }

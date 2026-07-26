@@ -235,4 +235,22 @@ public class TeacherServiceImpl implements TeacherService {
         result.put("tracker", tracker);
         return new ApiResponse("Submission tracker fetched", true, result);
     }
+
+    @Override
+    public ApiResponse getTeacherProfile(String teacherId) {
+        Teacher teacher = getTeacherByTeacherId(teacherId);
+        Map<String, Object> profile = new HashMap<>();
+        profile.put("teacherId", teacher.getTeacherId());
+        profile.put("name", teacher.getFullName());
+        profile.put("email", teacher.getEmail());
+        profile.put("phone", teacher.getPhone());
+        profile.put("department", teacher.getDepartment());
+        profile.put("qualification", teacher.getQualification());
+        profile.put("subjects", teacher.getSubjects().stream()
+                .map(s -> s.getName()).collect(Collectors.toList()));
+        profile.put("classes", teacher.getAssignedClasses().stream()
+                .map(c -> c.getClassName() + " - " + c.getSection()).collect(Collectors.toList()));
+        profile.put("active", teacher.isActive());
+        return new ApiResponse("Teacher profile fetched", true, profile);
+    }
 }

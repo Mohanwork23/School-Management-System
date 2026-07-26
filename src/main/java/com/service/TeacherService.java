@@ -25,4 +25,5 @@ public interface TeacherService {
     ApiResponse getTeacherDashboard(String teacherId);
 
     ApiResponse getAssignmentSubmissionTracker(String teacherId, Long assignmentId);
+    ApiResponse getTeacherProfile(String teacherId);
 }

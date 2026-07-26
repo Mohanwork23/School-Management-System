@@ -99,6 +99,12 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getAdminDashboardSummary());
     }
 
+    @Operation(summary = "Enhanced dashboard", description = "Get total students, teachers, classes, subjects, parents, exams and fees collected")
+    @GetMapping("/dashboard/enhanced")
+    public ResponseEntity<ApiResponse> getEnhancedDashboard() {
+        return ResponseEntity.ok(adminService.getEnhancedDashboard());
+    }
+
     @GetMapping("/students")
     public ResponseEntity<ApiResponse> getAllStudents() {
         return ResponseEntity.ok(adminService.getAllStudents());

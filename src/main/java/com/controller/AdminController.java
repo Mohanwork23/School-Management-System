@@ -289,6 +289,18 @@ public class AdminController {
         return ResponseEntity.ok(adminService.deleteTeacher(id));
     }
 
+    @Operation(summary = "Delete parent")
+    @DeleteMapping("/parents/{id}")
+    public ResponseEntity<ApiResponse> deleteParent(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.deleteParent(id));
+    }
+
+    @Operation(summary = "Delete subject")
+    @DeleteMapping("/subjects/{id}")
+    public ResponseEntity<ApiResponse> deleteSubject(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.deleteSubject(id));
+    }
+
     @Operation(summary = "Update class", description = "Update class name or section")
     @PutMapping("/classes/{classId}")
     public ResponseEntity<ApiResponse> updateClass(

@@ -107,6 +107,7 @@ See `.github/workflows/maven-ci.yml`
 | Day 12 | 2026-07-30 | Student upcoming exams, teacher assignment submission tracker, admin subject-wise result analysis |
 | Day 13 | 2026-07-31 | Admin delete student/teacher, update class, student profile view API |
 | Day 14 | 2026-08-01 | Teacher profile API, student self-service password change, enhanced admin dashboard with fees & exams count |
+| Day 15 | 2026-08-02 | Admin parent/subject deletion APIs and teacher assignment update API |
 
 ---
 

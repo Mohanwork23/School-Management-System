@@ -253,4 +253,23 @@ public class TeacherServiceImpl implements TeacherService {
         profile.put("active", teacher.isActive());
         return new ApiResponse("Teacher profile fetched", true, profile);
     }
+
+    @Override
+    public ApiResponse updateAssignment(String teacherId, Long assignmentId, UpdateAssignmentDTO dto) {
+        Teacher teacher = getTeacherByTeacherId(teacherId);
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+
+        if (!assignment.getTeacher().getId().equals(teacher.getId())) {
+            throw new ResourceNotFoundException("Assignment not found for this teacher");
+        }
+
+        assignment.setTitle(dto.getTitle());
+        assignment.setDescription(dto.getDescription());
+        assignment.setDueDate(dto.getDueDate().atStartOfDay());
+        assignment.setFileUrl(dto.getFileUrl());
+        assignmentRepository.save(assignment);
+
+        return new ApiResponse("Assignment updated successfully", true);
+    }
 }

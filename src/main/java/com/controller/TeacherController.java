@@ -2,6 +2,7 @@ package com.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,5 +85,14 @@ public class TeacherController {
     @GetMapping("/{teacherId}/profile")
     public ResponseEntity<ApiResponse> getTeacherProfile(@PathVariable String teacherId) {
         return ResponseEntity.ok(teacherService.getTeacherProfile(teacherId));
+    }
+
+    @Operation(summary = "Update assignment", description = "Update an assignment created by the teacher")
+    @PutMapping("/{teacherId}/assignments/{assignmentId}")
+    public ResponseEntity<ApiResponse> updateAssignment(
+            @PathVariable String teacherId,
+            @PathVariable Long assignmentId,
+            @Valid @RequestBody UpdateAssignmentDTO dto) {
+        return ResponseEntity.ok(teacherService.updateAssignment(teacherId, assignmentId, dto));
     }
 }

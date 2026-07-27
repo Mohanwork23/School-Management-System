@@ -4,6 +4,7 @@ import com.dto.ApiResponse;
 import com.dto.AssignmentRequestDTO;
 import com.dto.AttendanceMarkDTO;
 import com.dto.GradeEntryDTO;
+import com.dto.UpdateAssignmentDTO;
 import com.dto.exam.ResultEntryDTO;
 
 public interface TeacherService {
@@ -26,4 +27,5 @@ public interface TeacherService {
 
     ApiResponse getAssignmentSubmissionTracker(String teacherId, Long assignmentId);
     ApiResponse getTeacherProfile(String teacherId);
+    ApiResponse updateAssignment(String teacherId, Long assignmentId, UpdateAssignmentDTO dto);
 }

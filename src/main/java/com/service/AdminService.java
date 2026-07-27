@@ -51,6 +51,8 @@ public interface AdminService {
     ApiResponse getSubjectWiseResultAnalysis(Long classId);
     ApiResponse deleteStudent(Long id);
     ApiResponse deleteTeacher(Long id);
+    ApiResponse deleteParent(Long id);
+    ApiResponse deleteSubject(Long id);
     ApiResponse updateClass(Long classId, String className, String section);
     ApiResponse getStudentProfile(String studentId);
     ApiResponse getEnhancedDashboard();

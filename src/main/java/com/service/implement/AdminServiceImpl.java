@@ -789,6 +789,22 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public ApiResponse deleteParent(Long id) {
+        Parent parent = parentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Parent not found with ID: " + id));
+        parentRepository.delete(parent);
+        return new ApiResponse("Parent deleted successfully", true);
+    }
+
+    @Override
+    public ApiResponse deleteSubject(Long id) {
+        Subject subject = subjectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subject not found with ID: " + id));
+        subjectRepository.delete(subject);
+        return new ApiResponse("Subject deleted successfully", true);
+    }
+
+    @Override
     public ApiResponse updateClass(Long classId, String className, String section) {
         ClassRoom classRoom = classRoomRepository.findById(classId)
                 .orElseThrow(() -> new RuntimeException("Class not found with ID: " + classId));

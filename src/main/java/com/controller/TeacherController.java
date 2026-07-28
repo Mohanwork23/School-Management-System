@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/teacher")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class TeacherController {
 
     private final TeacherService teacherService;

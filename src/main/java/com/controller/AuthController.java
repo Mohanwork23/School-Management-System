@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.dto.ChangePasswordDTO;
 import com.dto.LoginDTO;
 import com.email.service.OTPService;
 import com.entity.users.User;
@@ -10,9 +11,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,46 +26,51 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final JwtUtil jwtUtil;
-    private final UserDetailsService userDetailsService;
     private final UserRepository userRepository;
     private final OTPService otpService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     @Operation(summary = "Login", description = "Authenticate user and return JWT token")
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO dto) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(dto.getUsername());
-        String jwt = jwtUtil.generateToken(userDetails);
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String jwt = jwtUtil.generateToken(userDetails);
 
-        User user = userRepository.findByUsername(dto.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            User user = userRepository.findByUsername(dto.getUsername())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", jwt);
-        response.put("username", user.getUsername());
-        response.put("role", user.getRole().name());
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", jwt);
+            response.put("username", user.getUsername());
+            response.put("role", user.getRole().name());
 
-        return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response);
+        } catch (AuthenticationException ex) {
+            return ResponseEntity.status(401).body(Map.of("message", "Invalid username or password"));
+        }
     }
 
     @Operation(summary = "Change password", description = "Change password for authenticated user")
     @PutMapping("/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> body) {
-        String username = body.get("username");
-        String oldPassword = body.get("oldPassword");
-        String newPassword = body.get("newPassword");
+    public ResponseEntity<?> changePassword(
+            Authentication authentication,
+            @Valid @RequestBody ChangePasswordDTO dto) {
+        String username = authentication.getName();
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!passwordEncoder.matches(oldPassword, user.getPassword()))
-            return ResponseEntity.badRequest().body(Map.of("message", "Old password is incorrect"));
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword()))
+            return ResponseEntity.badRequest().body(Map.of("message", "Current password is incorrect"));
 
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);
         return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
     }

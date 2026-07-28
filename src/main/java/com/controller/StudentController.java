@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.dto.ApiResponse;
+import com.security.AccessControlService;
 import com.service.StudentService;
 
 import lombok.RequiredArgsConstructor;
@@ -14,23 +15,26 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/student")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class StudentController {
 
     private final StudentService studentService;
+    private final AccessControlService accessControlService;
 
     @GetMapping("/{studentId}/timetable")
     public ResponseEntity<ApiResponse> getTimetable(@PathVariable String studentId) {
+        accessControlService.requireCurrentUser(studentId);
         return ResponseEntity.ok(studentService.getTimeTableForStudent(studentId));
     }
 
     @GetMapping("/{studentId}/grades")
     public ResponseEntity<ApiResponse> getGrades(@PathVariable String studentId) {
+        accessControlService.requireCurrentUser(studentId);
         return ResponseEntity.ok(studentService.getGradesForStudent(studentId));
     }
 
     @GetMapping("/{studentId}/assignments")
     public ResponseEntity<ApiResponse> getAssignments(@PathVariable String studentId) {
+        accessControlService.requireCurrentUser(studentId);
         return ResponseEntity.ok(studentService.getAssignmentsForStudent(studentId));
     }
 
@@ -39,47 +43,55 @@ public class StudentController {
             @PathVariable String studentId,
             @RequestParam Long assignmentId,
             @RequestParam String fileUrl) {
+        accessControlService.requireCurrentUser(studentId);
         return ResponseEntity.ok(studentService.submitAssignment(studentId, assignmentId, fileUrl));
     }
 
     @Operation(summary = "Get attendance", description = "Returns full attendance history for the student")
     @GetMapping("/{studentId}/attendance")
     public ResponseEntity<ApiResponse> getAttendance(@PathVariable String studentId) {
+        accessControlService.requireCurrentUser(studentId);
         return ResponseEntity.ok(studentService.getAttendanceForStudent(studentId));
     }
 
     @Operation(summary = "Get fee status", description = "Returns all fee payments made by the student")
     @GetMapping("/{studentId}/fees")
     public ResponseEntity<ApiResponse> getFeeStatus(@PathVariable String studentId) {
+        accessControlService.requireCurrentUser(studentId);
         return ResponseEntity.ok(studentService.getFeeStatus(studentId));
     }
 
     @GetMapping("/{studentId}/results")
     public ResponseEntity<ApiResponse> getStudentResults(@PathVariable String studentId) {
+        accessControlService.requireCurrentUser(studentId);
         return ResponseEntity.ok(studentService.getResults(studentId));
     }
 
     @Operation(summary = "Get report card", description = "Returns full report card with grades and attendance summary")
     @GetMapping("/{studentId}/report-card")
     public ResponseEntity<ApiResponse> getReportCard(@PathVariable String studentId) {
+        accessControlService.requireCurrentUser(studentId);
         return ResponseEntity.ok(studentService.getReportCard(studentId));
     }
 
     @Operation(summary = "Get student dashboard", description = "Returns assignment progress, attendance % and fee summary")
     @GetMapping("/{studentId}/dashboard")
     public ResponseEntity<ApiResponse> getStudentDashboard(@PathVariable String studentId) {
+        accessControlService.requireCurrentUser(studentId);
         return ResponseEntity.ok(studentService.getStudentDashboard(studentId));
     }
 
     @Operation(summary = "Get assignment submission progress")
     @GetMapping("/{studentId}/assignment-progress")
     public ResponseEntity<ApiResponse> getAssignmentSubmissionProgress(@PathVariable String studentId) {
+        accessControlService.requireCurrentUser(studentId);
         return ResponseEntity.ok(studentService.getAssignmentSubmissionProgress(studentId));
     }
 
     @Operation(summary = "Get upcoming exams", description = "Returns upcoming exams for the student's class")
     @GetMapping("/{studentId}/upcoming-exams")
     public ResponseEntity<ApiResponse> getUpcomingExams(@PathVariable String studentId) {
+        accessControlService.requireCurrentUser(studentId);
         return ResponseEntity.ok(studentService.getUpcomingExams(studentId));
     }
 
@@ -88,6 +100,7 @@ public class StudentController {
     public ResponseEntity<ApiResponse> changePassword(
             @PathVariable String studentId,
             @RequestBody java.util.Map<String, String> body) {
+        accessControlService.requireCurrentUser(studentId);
         return ResponseEntity.ok(studentService.changePassword(
                 studentId, body.get("oldPassword"), body.get("newPassword")));
     }

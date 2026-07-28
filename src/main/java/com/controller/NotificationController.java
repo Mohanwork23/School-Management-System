@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.dto.ApiResponse;
+import com.security.AccessControlService;
 import com.service.NotificationService;
 
 import lombok.RequiredArgsConstructor;
@@ -17,16 +18,19 @@ import lombok.RequiredArgsConstructor;
 public class NotificationController {
 
     private final NotificationService notificationService;
+    private final AccessControlService accessControlService;
 
     @Operation(summary = "Get notifications", description = "Returns all notifications for the given username")
     @GetMapping("/{username}")
     public ResponseEntity<ApiResponse> getNotifications(@PathVariable String username) {
+        accessControlService.requireCurrentUser(username);
         return ResponseEntity.ok(notificationService.getNotifications(username));
     }
 
     @Operation(summary = "Mark all read", description = "Marks all unread notifications as read for the given username")
     @PutMapping("/{username}/mark-read")
     public ResponseEntity<ApiResponse> markAllRead(@PathVariable String username) {
+        accessControlService.requireCurrentUser(username);
         return ResponseEntity.ok(notificationService.markAllRead(username));
     }
 }

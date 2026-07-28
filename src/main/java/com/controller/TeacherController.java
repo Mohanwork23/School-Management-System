@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.dto.*;
 import com.dto.exam.ResultEntryDTO;
+import com.security.AccessControlService;
 import com.service.TeacherService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,12 +20,14 @@ import lombok.RequiredArgsConstructor;
 public class TeacherController {
 
     private final TeacherService teacherService;
+    private final AccessControlService accessControlService;
 
     @Operation(summary = "Post assignment", description = "Create and assign a new assignment to a class")
     @PostMapping("/{teacherId}/assignment")
     public ResponseEntity<ApiResponse> postAssignment(
             @PathVariable String teacherId,
             @RequestBody AssignmentRequestDTO dto) {
+        accessControlService.requireCurrentUser(teacherId);
         return ResponseEntity.ok(teacherService.postAssignment(teacherId, dto));
     }
 
@@ -33,6 +36,7 @@ public class TeacherController {
     public ResponseEntity<ApiResponse> markAttendance(
             @PathVariable String teacherId,
             @RequestBody AttendanceMarkDTO dto) {
+        accessControlService.requireCurrentUser(teacherId);
         return ResponseEntity.ok(teacherService.markAttendance(teacherId, dto));
     }
 
@@ -40,22 +44,27 @@ public class TeacherController {
     public ResponseEntity<ApiResponse> enterGrades(
             @PathVariable String teacherId,
             @RequestBody GradeEntryDTO dto) {
+        accessControlService.requireCurrentUser(teacherId);
         return ResponseEntity.ok(teacherService.enterGrades(teacherId, dto));
     }
 
     @GetMapping("/{teacherId}/timetable")
     public ResponseEntity<ApiResponse> getTimetable(@PathVariable String teacherId) {
+        accessControlService.requireCurrentUser(teacherId);
         return ResponseEntity.ok(teacherService.getTimetable(teacherId));
     }
 
     @GetMapping("/{teacherId}/dashboard")
     public ResponseEntity<ApiResponse> getAssignedData(@PathVariable String teacherId) {
+        accessControlService.requireCurrentUser(teacherId);
         return ResponseEntity.ok(teacherService.getAssignedClassesAndSubjects(teacherId));
     }
 
     @PostMapping("/{teacherId}/publish-result")
     public ResponseEntity<ApiResponse> publishResult(
+            @PathVariable String teacherId,
             @RequestBody ResultEntryDTO dto) {
+        accessControlService.requireCurrentUser(teacherId);
         return ResponseEntity.ok(teacherService.publishResult(dto));
     }
 
@@ -63,12 +72,14 @@ public class TeacherController {
     public ResponseEntity<ApiResponse> getExamsByClass(
             @PathVariable String teacherId,
             @RequestParam Long classId) {
+        accessControlService.requireCurrentUser(teacherId);
         return ResponseEntity.ok(teacherService.getExamsByClass(classId));
     }
 
     @Operation(summary = "Teacher dashboard", description = "Returns classes, subjects and assignment count for the teacher")
     @GetMapping("/{teacherId}/full-dashboard")
     public ResponseEntity<ApiResponse> getTeacherDashboard(@PathVariable String teacherId) {
+        accessControlService.requireCurrentUser(teacherId);
         return ResponseEntity.ok(teacherService.getTeacherDashboard(teacherId));
     }
 
@@ -77,12 +88,14 @@ public class TeacherController {
     public ResponseEntity<ApiResponse> getSubmissionTracker(
             @PathVariable String teacherId,
             @PathVariable Long assignmentId) {
+        accessControlService.requireCurrentUser(teacherId);
         return ResponseEntity.ok(teacherService.getAssignmentSubmissionTracker(teacherId, assignmentId));
     }
 
     @Operation(summary = "Teacher profile", description = "Returns full profile of a teacher")
     @GetMapping("/{teacherId}/profile")
     public ResponseEntity<ApiResponse> getTeacherProfile(@PathVariable String teacherId) {
+        accessControlService.requireCurrentUser(teacherId);
         return ResponseEntity.ok(teacherService.getTeacherProfile(teacherId));
     }
 
@@ -92,6 +105,7 @@ public class TeacherController {
             @PathVariable String teacherId,
             @PathVariable Long assignmentId,
             @Valid @RequestBody UpdateAssignmentDTO dto) {
+        accessControlService.requireCurrentUser(teacherId);
         return ResponseEntity.ok(teacherService.updateAssignment(teacherId, assignmentId, dto));
     }
 }

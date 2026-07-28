@@ -109,6 +109,7 @@ See `.github/workflows/maven-ci.yml`
 | Day 14 | 2026-08-01 | Teacher profile API, student self-service password change, enhanced admin dashboard with fees & exams count |
 | Day 15 | 2026-08-02 | Admin parent/subject deletion APIs and teacher assignment update API |
 | Day 16 | 2026-08-03 | Hardened authentication: verified passwords at login, authenticated password changes, JWT secret validation and restricted CORS |
+| Day 17 | 2026-08-04 | Enforced authenticated ownership for student, parent, teacher and notification portal APIs |
 
 ---
 

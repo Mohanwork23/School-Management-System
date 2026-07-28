@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.dto.ApiResponse;
+import com.security.AccessControlService;
 import com.service.ParentService;
 
 import lombok.RequiredArgsConstructor;
@@ -14,52 +15,60 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/parent")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class ParentController {
 
     private final ParentService parentService;
+    private final AccessControlService accessControlService;
 
     @GetMapping("/{parentId}/grades")
     public ResponseEntity<ApiResponse> getChildGrades(@PathVariable String parentId) {
+        accessControlService.requireCurrentUser(parentId);
         return ResponseEntity.ok(parentService.getChildGrades(parentId));
     }
 
     @GetMapping("/{parentId}/attendance")
     public ResponseEntity<ApiResponse> getChildAttendance(@PathVariable String parentId) {
+        accessControlService.requireCurrentUser(parentId);
         return ResponseEntity.ok(parentService.getChildAttendance(parentId));
     }
 
     @Operation(summary = "Child fee status", description = "Returns fee payment history for all children of this parent")
     @GetMapping("/{parentId}/fees")
     public ResponseEntity<ApiResponse> getChildFeeStatus(@PathVariable String parentId) {
+        accessControlService.requireCurrentUser(parentId);
         return ResponseEntity.ok(parentService.getChildFeeStatus(parentId));
     }
 
     @GetMapping("/{parentId}/results")
     public ResponseEntity<ApiResponse> getChildResults(@PathVariable String parentId) {
+        accessControlService.requireCurrentUser(parentId);
         return ResponseEntity.ok(parentService.getChildResults(parentId));
     }
 
     @Operation(summary = "Parent dashboard", description = "Returns summary of all children linked to this parent")
     @GetMapping("/{parentId}/dashboard")
     public ResponseEntity<ApiResponse> getParentDashboard(@PathVariable String parentId) {
+        accessControlService.requireCurrentUser(parentId);
         return ResponseEntity.ok(parentService.getParentDashboard(parentId));
     }
 
     @GetMapping("/{parentId}/profile")
     public ResponseEntity<ApiResponse> getParentProfile(@PathVariable String parentId) {
+        accessControlService.requireCurrentUser(parentId);
         return ResponseEntity.ok(parentService.getParentProfile(parentId));
     }
 
     @Operation(summary = "Child timetable", description = "Returns timetable for all children of this parent")
     @GetMapping("/{parentId}/timetable")
     public ResponseEntity<ApiResponse> getChildTimetable(@PathVariable String parentId) {
+        accessControlService.requireCurrentUser(parentId);
         return ResponseEntity.ok(parentService.getChildTimetable(parentId));
     }
 
     @Operation(summary = "Child upcoming assignments", description = "Returns upcoming assignment deadlines for all children")
     @GetMapping("/{parentId}/upcoming-assignments")
     public ResponseEntity<ApiResponse> getChildUpcomingAssignments(@PathVariable String parentId) {
+        accessControlService.requireCurrentUser(parentId);
         return ResponseEntity.ok(parentService.getChildUpcomingAssignments(parentId));
     }
 }

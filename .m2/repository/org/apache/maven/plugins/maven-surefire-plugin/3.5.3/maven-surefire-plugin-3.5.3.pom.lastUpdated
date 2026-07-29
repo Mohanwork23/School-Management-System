@@ -1,4 +1,0 @@
-#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Wed Jul 29 18:43:18 IST 2026
-@default-central-https\://repo.maven.apache.org/maven2/.lastUpdated=1785330798633
-https\://repo.maven.apache.org/maven2/.error=Could not transfer artifact org.apache.maven.plugins\:maven-surefire-plugin\:pom\:3.5.3 from/to central (https\://repo.maven.apache.org/maven2)\: Permission denied\: getsockopt

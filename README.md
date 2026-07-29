@@ -68,6 +68,10 @@ MAIL_USERNAME=<your_email>
 MAIL_PASSWORD=<your_email_password>
 ```
 
+The default `dev` profile is intended for local work. For production, set
+`SPRING_PROFILES_ACTIVE=prod` with `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`,
+`JWT_SECRET`, and `CORS_ALLOWED_ORIGINS`.
+
 Build and run:
 
 ```bash
@@ -110,6 +114,7 @@ See `.github/workflows/maven-ci.yml`
 | Day 15 | 2026-08-02 | Admin parent/subject deletion APIs and teacher assignment update API |
 | Day 16 | 2026-08-03 | Hardened authentication: verified passwords at login, authenticated password changes, JWT secret validation and restricted CORS |
 | Day 17 | 2026-08-04 | Enforced authenticated ownership for student, parent, teacher and notification portal APIs |
+| Day 18 | 2026-08-05 | Added JWT and ownership unit tests; separated development and production configuration |
 
 ---
 

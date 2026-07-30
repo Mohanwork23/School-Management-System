@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.dto.ApiResponse;
@@ -66,6 +68,12 @@ public class AdminServiceImpl implements AdminService {
     private final FeePaymentRepository feePaymentRepository;
     private final ExamRepository examRepository;
     private final ResultRepository resultRepository;
+
+    @Value("${app.documents.max-size-bytes}")
+    private long maxDocumentSizeBytes;
+
+    @Value("${app.documents.allowed-content-types}")
+    private String allowedDocumentContentTypes;
 
     @Override
     public ApiResponse registerStudent(RegisterStudentDTO dto) {
@@ -177,9 +185,10 @@ public class AdminServiceImpl implements AdminService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         try {
+            validateDocument(file);
             Document document = new Document();
             document.setName(name);
-            document.setFileName(file.getOriginalFilename());
+            document.setFileName(sanitizeFileName(file.getOriginalFilename()));
             document.setContentType(file.getContentType());
             document.setFileSize(file.getSize());
             document.setFileContent(file.getBytes());
@@ -191,6 +200,34 @@ public class AdminServiceImpl implements AdminService {
         } catch (java.io.IOException e) {
             throw new RuntimeException("File processing failed", e);
         }
+    }
+
+    private void validateDocument(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("A non-empty document file is required");
+        }
+        if (file.getSize() > maxDocumentSizeBytes) {
+            throw new IllegalArgumentException("Document size must not exceed " + maxDocumentSizeBytes + " bytes");
+        }
+
+        String contentType = file.getContentType();
+        boolean allowedContentType = contentType != null
+                && java.util.Arrays.stream(allowedDocumentContentTypes.split(","))
+                .map(String::trim)
+                .anyMatch(type -> type.equalsIgnoreCase(contentType));
+        if (!allowedContentType) {
+            throw new IllegalArgumentException("Only PDF, JPEG, and PNG documents are allowed");
+        }
+
+        sanitizeFileName(file.getOriginalFilename());
+    }
+
+    private String sanitizeFileName(String originalFileName) {
+        String fileName = StringUtils.cleanPath(originalFileName == null ? "" : originalFileName);
+        if (!StringUtils.hasText(fileName) || fileName.contains("..")) {
+            throw new IllegalArgumentException("Invalid document file name");
+        }
+        return java.nio.file.Paths.get(fileName).getFileName().toString();
     }
 
     @Override

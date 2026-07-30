@@ -115,6 +115,7 @@ See `.github/workflows/maven-ci.yml`
 | Day 16 | 2026-08-03 | Hardened authentication: verified passwords at login, authenticated password changes, JWT secret validation and restricted CORS |
 | Day 17 | 2026-08-04 | Enforced authenticated ownership for student, parent, teacher and notification portal APIs |
 | Day 18 | 2026-08-05 | Added JWT and ownership unit tests; separated development and production configuration |
+| Day 19 | 2026-08-06 | Hardened document uploads with size, MIME-type and filename validation |
 
 ---
 

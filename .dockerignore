@@ -1,0 +1,12 @@
+target/
+.mvn/
+*.log
+*.tmp
+/.git
+uploads/
+**/node_modules/
+**/dist/
+*.iml
+*.class
+*.jar
+*.war

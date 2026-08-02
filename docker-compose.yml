@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  db:
+    image: mysql:8.0
+    container_name: sms-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sms
+      MYSQL_USER: smsuser
+      MYSQL_PASSWORD: smspass
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: sms-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:mysql://db:3306/sms
+      DB_USERNAME: smsuser
+      DB_PASSWORD: smspass
+      JWT_SECRET: change-me-in-production-with-at-least-32-bytes
+      MAIL_USERNAME: ""
+      MAIL_PASSWORD: ""
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
+    ports:
+      - "8080:8080"

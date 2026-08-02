@@ -88,6 +88,12 @@ docker build -t sms:daily .
 docker run -e DB_USERNAME=root -e DB_PASSWORD=root -p 8080:8080 sms:daily
 ```
 
+Docker Compose (recommended for local demo):
+
+```bash
+docker compose up --build
+```
+
 Resume-ready summary:
 
 - Role: Backend engineer — designed and implemented a monolithic Spring Boot REST API for a School Management System handling RBAC, JWT security, attendance, fees, timetables, exams, and parent portal features.

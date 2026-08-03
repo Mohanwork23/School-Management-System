@@ -1,5 +1,9 @@
 # School Management System (SMS)
 
+[![CI](https://github.com/Mohanwork23/School-Management-System/actions/workflows/maven-ci.yml/badge.svg?branch=main)](https://github.com/Mohanwork23/School-Management-System/actions/workflows/maven-ci.yml)
+[![CI (daily)](https://github.com/Mohanwork23/School-Management-System/actions/workflows/maven-ci.yml/badge.svg?branch=daily)](https://github.com/Mohanwork23/School-Management-System/actions/workflows/maven-ci.yml)
+
+
 A production-ready, full-stack **School Management System** built with **Spring Boot 3**, designed to digitize and streamline school operations including student enrollment, attendance, fee management, timetables, exams, and parent communication.
 
 > Developed as part of 3 years of hands-on Java backend development experience, demonstrating real-world application of Spring Boot, REST APIs, JWT Security, JPA/Hibernate, and MySQL.

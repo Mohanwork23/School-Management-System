@@ -1,5 +1,10 @@
 # Changelog (recent daily updates)
 
+## 2026-08-04 — Day 5
+- Added a security scan workflow (`scan-image.yml`) using Trivy to validate published container images.
+- Added a GitHub Actions Docker publish workflow (`docker-publish.yml`) and README badge.
+- Improved deployment documentation with GHCR and Docker Compose usage.
+
 ## 2026-08-03 — Day 4
 - Added Flyway DB migration support and created initial baseline migration `V1__create_initial_schema.sql`.
 - Added `docker-compose.yml` to run MySQL + the app locally for demos.

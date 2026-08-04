@@ -4,7 +4,7 @@
 [![CI (daily)](https://github.com/Mohanwork23/School-Management-System/actions/workflows/maven-ci.yml/badge.svg?branch=daily)](https://github.com/Mohanwork23/School-Management-System/actions/workflows/maven-ci.yml)
 
 [![Container Publish](https://github.com/Mohanwork23/School-Management-System/actions/workflows/docker-publish.yml/badge.svg?branch=main)](https://github.com/Mohanwork23/School-Management-System/actions/workflows/docker-publish.yml)
-
+[![Security Scan](https://github.com/Mohanwork23/School-Management-System/actions/workflows/scan-image.yml/badge.svg?branch=main)](https://github.com/Mohanwork23/School-Management-System/actions/workflows/scan-image.yml)
 
 A production-ready, full-stack **School Management System** built with **Spring Boot 3**, designed to digitize and streamline school operations including student enrollment, attendance, fee management, timetables, exams, and parent communication.
 
@@ -109,11 +109,45 @@ Resume-ready summary:
 
 ## CI/CD
 
-GitHub Actions workflow triggers on every push to `main`:
-- Builds the project with Maven
-- Packages the application as a JAR
+GitHub Actions workflows run on every push to `main` and `daily`:
+- `maven-ci.yml` runs tests and packages the application
+- `docker-publish.yml` builds and publishes the app image to GHCR
+- `scan-image.yml` scans the published container image for vulnerabilities
 
-See `.github/workflows/maven-ci.yml`
+See `.github/workflows/maven-ci.yml`, `.github/workflows/docker-publish.yml`, and `.github/workflows/scan-image.yml`
+
+---
+
+## Deployment
+
+### Publish to GitHub Container Registry
+
+1. Ensure `GITHUB_TOKEN` is available in GitHub Actions.
+2. Push to `main` or `daily`.
+3. The workflow builds and pushes images to:
+   - `ghcr.io/<owner>/school-management-system:latest`
+   - `ghcr.io/<owner>/school-management-system:<commit-sha>`
+
+### Run locally with Docker Compose
+
+```bash
+docker compose up --build
+```
+
+This starts:
+- MySQL at `localhost:3306`
+- the app at `http://localhost:8080`
+
+### Run the container image locally
+
+```bash
+docker run -e DB_URL=jdbc:mysql://host.docker.internal:3306/sms \
+  -e DB_USERNAME=smsuser \
+  -e DB_PASSWORD=smspass \
+  -e JWT_SECRET=replace-with-a-long-secret \
+  -p 8080:8080 \
+  ghcr.io/<owner>/school-management-system:latest
+```
 
 ---
 

@@ -87,6 +87,8 @@ java -jar target/SMS-0.0.1-SNAPSHOT.jar
 
 API Docs available at: `http://localhost:8080/swagger-ui.html`
 
+Health check endpoint available at: `http://localhost:8080/actuator/health`
+
 Docker (quick):
 
 ```bash

@@ -1,5 +1,10 @@
 # Changelog (recent daily updates)
 
+## 2026-08-05 — Day 6
+- Enabled unauthenticated access to `/actuator/health` and `/actuator/info` for readiness monitoring.
+- Added an integration test for the Actuator health endpoint.
+- Documented actuator health availability in `README.md`.
+
 ## 2026-08-04 — Day 5
 - Added a security scan workflow (`scan-image.yml`) using Trivy to validate published container images.
 - Added a GitHub Actions Docker publish workflow (`docker-publish.yml`) and README badge.

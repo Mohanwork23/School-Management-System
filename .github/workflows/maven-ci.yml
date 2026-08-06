@@ -28,8 +28,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Test
-        run: mvn -B test
+      - name: Verify
+        run: mvn -B verify
 
       - name: Build
         run: mvn -B -DskipTests=true package

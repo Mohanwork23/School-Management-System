@@ -1,5 +1,9 @@
 # Changelog (recent daily updates)
 
+## 2026-08-06 — Day 7
+- Added Maven Checkstyle support with the Google style guide.
+- Updated CI to run `mvn verify` so style violations are caught automatically.
+
 ## 2026-08-05 — Day 6
 - Enabled unauthenticated access to `/actuator/health` and `/actuator/info` for readiness monitoring.
 - Added an integration test for the Actuator health endpoint.

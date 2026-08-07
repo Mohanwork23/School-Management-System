@@ -1,5 +1,10 @@
 # Changelog (recent daily updates)
 
+## 2026-08-07 — Day 8
+- Added JaCoCo code coverage reporting to Maven build.
+- Configured CI to upload coverage reports to Codecov for visibility.
+- Set up coverage analysis during test phase.
+
 ## 2026-08-06 — Day 7
 - Added Maven Checkstyle support with the Google style guide.
 - Updated CI to run `mvn verify` so style violations are caught automatically.

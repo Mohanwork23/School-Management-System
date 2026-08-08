@@ -15,6 +15,10 @@ public class StatusController {
 
     @Value("${spring.application.name:SMS}")
     private String appName;
+    @Value("${app.version:}")
+    private String appVersion;
+    @Value("${git.commit:}")
+    private String gitCommit;
 
     @GetMapping("/status")
     public Map<String, Object> status() {
@@ -22,6 +26,12 @@ public class StatusController {
         m.put("app", appName);
         m.put("status", "OK");
         m.put("timestamp", Instant.now().toString());
+        if (appVersion != null && !appVersion.isBlank()) {
+            m.put("version", appVersion);
+        }
+        if (gitCommit != null && !gitCommit.isBlank()) {
+            m.put("commit", gitCommit);
+        }
         return m;
     }
 }

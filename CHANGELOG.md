@@ -9,6 +9,10 @@
 - Added a lightweight `GET /api/status` endpoint returning app name, status, and timestamp for simple demos and readiness checks.
 - Added integration test to verify `/api/status` is accessible and returns `status: OK`.
 
+## 2026-08-09 — Day 10
+- Added `GET /api/readiness` endpoint that verifies database connectivity and returns `200 OK` when DB is reachable or `503` when not.
+- Added integration tests for readiness success and failure cases using a mocked `DataSource`.
+
 ## 2026-08-06 — Day 7
 - Added Maven Checkstyle support with the Google style guide.
 - Updated CI to run `mvn verify` so style violations are caught automatically.

@@ -5,6 +5,10 @@
 - Configured CI to upload coverage reports to Codecov for visibility.
 - Set up coverage analysis during test phase.
 
+## 2026-08-08 — Day 9
+- Added a lightweight `GET /api/status` endpoint returning app name, status, and timestamp for simple demos and readiness checks.
+- Added integration test to verify `/api/status` is accessible and returns `status: OK`.
+
 ## 2026-08-06 — Day 7
 - Added Maven Checkstyle support with the Google style guide.
 - Updated CI to run `mvn verify` so style violations are caught automatically.

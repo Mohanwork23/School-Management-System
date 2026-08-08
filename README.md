@@ -89,6 +89,8 @@ API Docs available at: `http://localhost:8080/swagger-ui.html`
 
 Health check endpoint available at: `http://localhost:8080/actuator/health`
 
+Status endpoint available at: `http://localhost:8080/api/status` (returns basic app info and timestamp)
+
 Docker (quick):
 
 ```bash

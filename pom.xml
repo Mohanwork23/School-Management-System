@@ -181,6 +181,11 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+						<configuration>
+							<outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+							<xml>true</xml>
+							<csv>false</csv>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

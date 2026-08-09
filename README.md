@@ -92,6 +92,8 @@ Health check endpoint available at: `http://localhost:8080/actuator/health`
 Status endpoint available at: `http://localhost:8080/api/status` (returns basic app info, timestamp, version, and commit when available)
 Readiness endpoint available at: `http://localhost:8080/api/readiness` (checks DB connectivity)
 
+Coverage reports are generated during CI via JaCoCo and uploaded to Codecov.
+
 Docker (quick):
 
 ```bash

@@ -1,9 +1,9 @@
 # Changelog (recent daily updates)
 
 ## 2026-08-07 — Day 8
-- Added JaCoCo code coverage reporting to Maven build.
-- Configured CI to upload coverage reports to Codecov for visibility.
-- Set up coverage analysis during test phase.
+- Added JaCoCo code coverage reporting to the Maven build.
+- Configured CI to upload coverage reports to Codecov.
+- Ensured JaCoCo produces XML output for Codecov compatibility.
 
 ## 2026-08-08 — Day 9
 - Added a lightweight `GET /api/status` endpoint returning app name, status, and timestamp for simple demos and readiness checks.

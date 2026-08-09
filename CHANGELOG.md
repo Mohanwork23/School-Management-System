@@ -12,6 +12,7 @@
 ## 2026-08-09 — Day 10
 - Added `GET /api/readiness` endpoint that verifies database connectivity and returns `200 OK` when DB is reachable or `503` when not.
 - Added integration tests for readiness success and failure cases using a mocked `DataSource`.
+- Added build metadata injection for `/api/status` using Maven and Git commit information.
 
 ## 2026-08-06 — Day 7
 - Added Maven Checkstyle support with the Google style guide.

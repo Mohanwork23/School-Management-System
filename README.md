@@ -5,7 +5,8 @@
 
 [![Container Publish](https://github.com/Mohanwork23/School-Management-System/actions/workflows/docker-publish.yml/badge.svg?branch=main)](https://github.com/Mohanwork23/School-Management-System/actions/workflows/docker-publish.yml)
 [![Security Scan](https://github.com/Mohanwork23/School-Management-System/actions/workflows/scan-image.yml/badge.svg?branch=main)](https://github.com/Mohanwork23/School-Management-System/actions/workflows/scan-image.yml)
-[![Codecov](https://codecov.io/gh/Mohanwork23/School-Management-System/branch/main/graph/badge.svg)](https://codecov.io/gh/Mohanwork23/School-Management-System)
+[![Codecov (main)](https://codecov.io/gh/Mohanwork23/School-Management-System/branch/main/graph/badge.svg)](https://codecov.io/gh/Mohanwork23/School-Management-System)
+[![Codecov (daily)](https://codecov.io/gh/Mohanwork23/School-Management-System/branch/daily/graph/badge.svg)](https://codecov.io/gh/Mohanwork23/School-Management-System)
 
 A production-ready, full-stack **School Management System** built with **Spring Boot 3**, designed to digitize and streamline school operations including student enrollment, attendance, fee management, timetables, exams, and parent communication.
 

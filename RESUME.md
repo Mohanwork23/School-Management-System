@@ -7,3 +7,4 @@
 - Configured **GitHub Actions CI/CD** with automated Maven tests, Docker image publishing to GHCR, and Trivy container security scanning.
 - Containerized the application with **Docker** and enabled local demo orchestration through **Docker Compose**.
 - Implemented centralized exception handling, file upload support, and OTP-based email verification for secure user workflows.
+- Updated CI to trigger on the `daily` branch and added Codecov coverage reporting; committed and pushed today's updates to improve coverage visibility.

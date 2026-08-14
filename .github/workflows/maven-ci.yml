@@ -17,6 +17,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Print Java and Maven versions
+        run: |
+          java -version || true
+          mvn -v || true
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
@@ -31,8 +35,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Verify
-        run: mvn -B verify
+      - name: Verify (with diagnostics)
+        run: mvn -B -e verify
 
       - name: Build
         run: mvn -B -DskipTests=true package

@@ -14,6 +14,7 @@
 - Added integration tests for readiness success and failure cases using a mocked `DataSource`.
 - Added build metadata injection for `/api/status` using Maven and Git commit information.
 - Updated CI workflow to trigger on the `daily` branch, and added pull request and manual dispatch triggers for faster developer feedback.
+ - Added diagnostic logging to CI: print Java/Maven versions and enable Maven error output for clearer failure traces.
 
 ## 2026-08-06 — Day 7
 - Added Maven Checkstyle support with the Google style guide.

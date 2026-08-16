@@ -35,8 +35,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Verify (with diagnostics, skip Checkstyle)
-        run: mvn -B -e -Dcheckstyle.skip=true verify
+      - name: Verify
+        run: mvn -B -e verify
 
       - name: Build
         run: mvn -B -DskipTests=true package

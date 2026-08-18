@@ -1,5 +1,10 @@
 # Changelog (recent daily updates)
 
+## 2026-08-18 — Day 13
+- Removed all commented-out dead code blocks from `StudentServiceImpl` (old `getTimeTableForStudent` and `getStudentDashboard` stubs).
+- Fixed `changePassword` in `StudentServiceImpl`: replaced inline `new BCryptPasswordEncoder()` with injected `PasswordEncoder` bean — consistent with Day 12 fix in `AdminServiceImpl`.
+- Cleaned up fully-qualified `com.entity.academic.Exam` reference to a proper import.
+
 ## 2026-08-17 — Day 12
 - Replaced `System.out.println` and `e.printStackTrace()` in `FileStorageServiceImpl` with SLF4J (`@Slf4j`) logging.
 - Externalized hardcoded `http://localhost:8080` file URL to `app.base-url` property (configurable via `APP_BASE_URL` env var).

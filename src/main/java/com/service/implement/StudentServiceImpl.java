@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dto.ApiResponse;
@@ -13,6 +14,7 @@ import com.dto.AttendanceDTO;
 import com.dto.ResultDTO;
 import com.entity.academic.Assignment;
 import com.entity.academic.AssignmentSubmission;
+import com.entity.academic.Exam;
 import com.entity.academic.Result;
 import com.entity.attendance.Attendance;
 import com.entity.fees.FeePayment;
@@ -42,6 +44,7 @@ public class StudentServiceImpl implements StudentService {
     private final FeePaymentRepository feePaymentRepository;
     private final TimeTableEntryRepository timeTableEntryRepository;
     private final ExamRepository examRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private Student getStudent(String studentId) {
         return studentRepository.findByStudentId(studentId)
@@ -57,24 +60,6 @@ public class StudentServiceImpl implements StudentService {
         return new ApiResponse("Timetable fetched", true,
                 timeTableEntryRepository.findByClassRoomIdOrderByDayOfWeekAscPeriodAsc(classId));
     }
-
-//    @Override
-//    public ApiResponse getTimeTableForStudent(String studentId) {
-//        Student student = getStudent(studentId);
-//        List<TimeTableDTO> slots = timetableRepository.findByClassRoom(student.getClassRoom());
-//
-//        List<TimetableSlotDTO> dtos = slots.stream().map(slot -> {
-//            TimetableSlotDTO dto = new TimetableSlotDTO();
-//            dto.setDayOfWeek(slot.getDayOfWeek());
-//            dto.setStartTime(slot.getStartTime().toString());
-//            dto.setEndTime(slot.getEndTime().toString());
-//            dto.setSubjectName(slot.getSubjectId().toString());
-//            dto.setTeacherName(slot.getTeacherId().toString());
-//            return dto;
-//        }).collect(Collectors.toList());
-//
-//        return new ApiResponse("Timetable fetched", true, dtos);
-//    }
 
     @Override
     public ApiResponse getGradesForStudent(String studentId) {
@@ -217,40 +202,6 @@ public class StudentServiceImpl implements StudentService {
         return new ApiResponse("Student report card generated successfully", true, reportCard);
     }
 
-//    @Override
-//    public ApiResponse getStudentDashboard(String studentId) {
-//        Student student = getStudent(studentId);
-//        Map<String, Object> dashboard = new HashMap<>();
-//
-//        List<Assignment> assignments = assignmentRepository.findByClassRoom(student.getClassRoom());
-//        long totalAssignments = assignments.size();
-//        long submittedAssignments = assignmentSubmissionRepository.findByStudent(student).stream()
-//                .map(AssignmentSubmission::getAssignment)
-//                .distinct()
-//                .count();
-//        long pendingAssignments = totalAssignments - submittedAssignments;
-//
-//        dashboard.put("totalAssignments", totalAssignments);
-//        dashboard.put("submittedAssignments", submittedAssignments);
-//        dashboard.put("pendingAssignments", pendingAssignments);
-//
-//        List<Attendance> attendanceList = attendanceRepository.findByStudent(student);
-//        long presentCount = attendanceList.stream()
-//                .filter(a -> a.getStatus().toString().equalsIgnoreCase("PRESENT"))
-//                .count();
-//        long totalDays = attendanceList.size();
-//        double attendancePercentage = totalDays > 0 ? (presentCount * 100.0 / totalDays) : 0.0;
-//        dashboard.put("attendancePercentage", String.format("%.2f", attendancePercentage) + "%");
-//
-//        List<FeeInvoice> invoices = feeInvoiceRepository.findByStudent(student);
-//        double totalFees = invoices.stream().mapToDouble(FeeInvoice::getTotalAmount).sum();
-//        double paidFees = invoices.stream().filter(FeeInvoice::isPaid).mapToDouble(FeeInvoice::getTotalAmount).sum();
-//        dashboard.put("totalFees", totalFees);
-//        dashboard.put("paidFees", paidFees);
-//
-//        return new ApiResponse("Dashboard fetched successfully", true, dashboard);
-//    }
-
     @Override
     public ApiResponse getAssignmentSubmissionProgress(String studentId) {
         Student student = getStudent(studentId);
@@ -275,8 +226,7 @@ public class StudentServiceImpl implements StudentService {
         Student student = getStudent(studentId);
         if (student.getClassRoom() == null)
             return new ApiResponse("No class assigned", false);
-        List<com.entity.academic.Exam> exams = examRepository
-                .findByClassRoomIdOrderByExamDateAsc(student.getClassRoom().getId());
+        List<Exam> exams = examRepository.findByClassRoomIdOrderByExamDateAsc(student.getClassRoom().getId());
         List<Map<String, Object>> upcoming = exams.stream()
                 .filter(e -> e.getExamDate() != null && !e.getExamDate().isBefore(java.time.LocalDate.now()))
                 .map(e -> {
@@ -309,11 +259,9 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public ApiResponse changePassword(String studentId, String oldPassword, String newPassword) {
         Student student = getStudent(studentId);
-        org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder encoder =
-                new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
-        if (!encoder.matches(oldPassword, student.getPassword()))
+        if (!passwordEncoder.matches(oldPassword, student.getPassword()))
             return new ApiResponse("Old password is incorrect", false);
-        student.setPassword(encoder.encode(newPassword));
+        student.setPassword(passwordEncoder.encode(newPassword));
         studentRepository.save(student);
         return new ApiResponse("Password changed successfully", true);
     }

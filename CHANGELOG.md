@@ -1,5 +1,11 @@
 # Changelog (recent daily updates)
 
+## 2026-08-17 — Day 12
+- Replaced `System.out.println` and `e.printStackTrace()` in `FileStorageServiceImpl` with SLF4J (`@Slf4j`) logging.
+- Externalized hardcoded `http://localhost:8080` file URL to `app.base-url` property (configurable via `APP_BASE_URL` env var).
+- Fixed `AdminServiceImpl`: replaced direct `new BCryptPasswordEncoder()` instantiation with injected `PasswordEncoder` bean from `SecurityConfig` — proper Spring DI pattern.
+- Fixed NPE risk in `getTeacherDocuments`: replaced `orElse(null)` followed by `.getUsername()` with `orElseThrow`, preventing a silent null pointer crash.
+
 ## 2026-08-16 — Day 11+
 - Fixed POM XML malformation (missing `<plugin>` tag for maven-compiler-plugin).
 - Resolved Checkstyle plugin version availability issues (downgraded to 3.1.2).

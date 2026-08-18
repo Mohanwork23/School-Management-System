@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +62,7 @@ public class AdminServiceImpl implements AdminService {
     private final SubjectRepository subjectRepository;
     private final UserRepository userRepository;
     private final DocumentRepository documentRepository;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final AttendanceRepository attendanceRepository;
     private final FeePaymentRepository feePaymentRepository;
@@ -582,7 +582,7 @@ public class AdminServiceImpl implements AdminService {
 	@Override
     @Transactional(readOnly = true)
     public ApiResponse getTeacherDocuments(Long teacherId) {
-    	Teacher teacher = teacherRepository.findById(teacherId).orElse(null);
+    	Teacher teacher = teacherRepository.findById(teacherId).orElseThrow(() -> new RuntimeException("Teacher not found with ID: " + teacherId));
         User user = userRepository.findByUsername(teacher.getUsername())
             .orElseThrow(() -> new RuntimeException("User with ID " + teacherId + " not found"));
 

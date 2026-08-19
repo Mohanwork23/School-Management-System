@@ -75,6 +75,7 @@ public class AdminServiceImpl implements AdminService {
     @Value("${app.documents.allowed-content-types}")
     private String allowedDocumentContentTypes;
 
+    @Transactional
     @Override
     public ApiResponse registerStudent(RegisterStudentDTO dto) {
         Student student = new Student();
@@ -113,6 +114,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
 
+    @Transactional
     @Override
     public ApiResponse registerTeacher(RegisterTeacherDTO dto) {
         Teacher teacher = new Teacher();
@@ -147,6 +149,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
 
+    @Transactional
     @Override
     public ApiResponse registerParent(RegisterParentDTO dto) {
         long counter = parentRepository.count();
@@ -809,6 +812,7 @@ public class AdminServiceImpl implements AdminService {
         return new ApiResponse("Subject-wise result analysis fetched", true, analysis);
     }
 
+    @Transactional
     @Override
     public ApiResponse deleteStudent(Long id) {
         Student student = studentRepository.findById(id)
@@ -817,6 +821,7 @@ public class AdminServiceImpl implements AdminService {
         return new ApiResponse("Student deleted successfully", true);
     }
 
+    @Transactional
     @Override
     public ApiResponse deleteTeacher(Long id) {
         Teacher teacher = teacherRepository.findById(id)
@@ -825,6 +830,7 @@ public class AdminServiceImpl implements AdminService {
         return new ApiResponse("Teacher deleted successfully", true);
     }
 
+    @Transactional
     @Override
     public ApiResponse deleteParent(Long id) {
         Parent parent = parentRepository.findById(id)
@@ -833,6 +839,7 @@ public class AdminServiceImpl implements AdminService {
         return new ApiResponse("Parent deleted successfully", true);
     }
 
+    @Transactional
     @Override
     public ApiResponse deleteSubject(Long id) {
         Subject subject = subjectRepository.findById(id)

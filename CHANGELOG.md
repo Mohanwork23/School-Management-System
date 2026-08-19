@@ -1,5 +1,9 @@
 # Changelog (recent daily updates)
 
+## 2026-08-19 — Day 14
+- Fixed `.gitignore`: added `uploads/` rule and removed 3 personal PDF files from git tracking (`git rm --cached`) — runtime-uploaded files should never be in version control.
+- Added `@Transactional` to all write operations in `AdminServiceImpl`: `registerStudent`, `registerTeacher`, `registerParent`, `uploadDocument`, `deleteStudent`, `deleteTeacher`, `deleteParent`, `deleteSubject` — ensures DB writes roll back cleanly if an exception occurs mid-operation (e.g. email failure after save).
+
 ## 2026-08-18 — Day 13
 - Removed all commented-out dead code blocks from `StudentServiceImpl` (old `getTimeTableForStudent` and `getStudentDashboard` stubs).
 - Fixed `changePassword` in `StudentServiceImpl`: replaced inline `new BCryptPasswordEncoder()` with injected `PasswordEncoder` bean — consistent with Day 12 fix in `AdminServiceImpl`.

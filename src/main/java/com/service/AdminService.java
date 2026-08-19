@@ -2,6 +2,7 @@ package com.service;
 
 import java.util.Map;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.dto.ApiResponse;
@@ -22,8 +23,8 @@ public interface AdminService {
     ApiResponse assignSubjectToClass(Long subjectId, Long classId);
     ApiResponse createSubject(SubjectDTO dto);
     ApiResponse getAdminDashboardSummary();
-    ApiResponse getAllStudents();
-    ApiResponse getAllTeachers();
+    ApiResponse getAllStudents(Pageable pageable);
+    ApiResponse getAllTeachers(Pageable pageable);
     ApiResponse getAllClasses();
     ApiResponse getAllSubjects();
     ApiResponse getAllParents();

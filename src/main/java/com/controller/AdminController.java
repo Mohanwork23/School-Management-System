@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.Map;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -106,13 +108,15 @@ public class AdminController {
     }
 
     @GetMapping("/students")
-    public ResponseEntity<ApiResponse> getAllStudents() {
-        return ResponseEntity.ok(adminService.getAllStudents());
+    public ResponseEntity<ApiResponse> getAllStudents(
+            @PageableDefault(size = 20, sort = "fullName") Pageable pageable) {
+        return ResponseEntity.ok(adminService.getAllStudents(pageable));
     }
 
     @GetMapping("/teachers")
-    public ResponseEntity<ApiResponse> getAllTeachers() {
-        return ResponseEntity.ok(adminService.getAllTeachers());
+    public ResponseEntity<ApiResponse> getAllTeachers(
+            @PageableDefault(size = 20, sort = "fullName") Pageable pageable) {
+        return ResponseEntity.ok(adminService.getAllTeachers(pageable));
     }
 
     @GetMapping("/classes")

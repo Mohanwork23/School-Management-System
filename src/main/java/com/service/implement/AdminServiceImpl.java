@@ -9,6 +9,8 @@ import java.util.Map;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -300,14 +302,15 @@ public class AdminServiceImpl implements AdminService {
 
     @Transactional
     @Override
-    public ApiResponse getAllStudents() {
-        List<Student> students = studentRepository.findAll();
-
-        List<StudentResponseDTO> studentDTOs = students.stream()
-            .map(this::mapToDTO)  
-            .toList();
-        
-        return new ApiResponse("Students fetched", true, studentDTOs);
+     public ApiResponse getAllStudents(Pageable pageable) {
+        Page<Student> page = studentRepository.findAll(pageable);
+        List<StudentResponseDTO> studentDTOs = page.getContent().stream().map(this::mapToDTO).toList();
+        Map<String, Object> result = new HashMap<>();
+        result.put("students", studentDTOs);
+        result.put("totalElements", page.getTotalElements());
+        result.put("totalPages", page.getTotalPages());
+        result.put("currentPage", page.getNumber());
+        return new ApiResponse("Students fetched", true, result);
     }
     private StudentResponseDTO mapToDTO(Student student) {
         String parentUsername = (student.getParent() != null) ? student.getParent().getUsername() : "Unknown";
@@ -349,13 +352,16 @@ public class AdminServiceImpl implements AdminService {
 
 
 
-    @Override
-    public ApiResponse getAllTeachers() {
-        List<Teacher> teachers = teacherRepository.findAll();
-        List<TeacherResponseDTO> dtos = teachers.stream()
-            .map(this::mapToDTO)
-            .toList();
-        return new ApiResponse("Teachers fetched", true, dtos);
+     @Override
+     public ApiResponse getAllTeachers(Pageable pageable) {
+        Page<Teacher> page = teacherRepository.findAll(pageable);
+        List<TeacherResponseDTO> dtos = page.getContent().stream().map(this::mapToDTO).toList();
+        Map<String, Object> result = new HashMap<>();
+        result.put("teachers", dtos);
+        result.put("totalElements", page.getTotalElements());
+        result.put("totalPages", page.getTotalPages());
+        result.put("currentPage", page.getNumber());
+        return new ApiResponse("Teachers fetched", true, result);
     }
 
     private TeacherResponseDTO mapToDTO(Teacher teacher) {

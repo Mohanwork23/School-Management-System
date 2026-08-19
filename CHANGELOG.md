@@ -1,5 +1,12 @@
 # Changelog (recent daily updates)
 
+## 2026-08-20 — Day 15
+- Added pagination to `GET /api/admin/students` and `GET /api/admin/teachers`.
+- Both endpoints now accept `?page=0&size=20&sort=fullName` query params via Spring's `Pageable`.
+- Response now includes `students/teachers`, `totalElements`, `totalPages`, and `currentPage` — production-standard paginated API shape.
+- Default page size is 20, sorted by `fullName` via `@PageableDefault`.
+- Returning `findAll()` on a large table is a scalability red flag — this fixes it.
+
 ## 2026-08-19 — Day 14
 - Fixed `.gitignore`: added `uploads/` rule and removed 3 personal PDF files from git tracking (`git rm --cached`) — runtime-uploaded files should never be in version control.
 - Added `@Transactional` to all write operations in `AdminServiceImpl`: `registerStudent`, `registerTeacher`, `registerParent`, `uploadDocument`, `deleteStudent`, `deleteTeacher`, `deleteParent`, `deleteSubject` — ensures DB writes roll back cleanly if an exception occurs mid-operation (e.g. email failure after save).

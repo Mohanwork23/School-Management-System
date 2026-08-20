@@ -1,5 +1,10 @@
 # Changelog (recent daily updates)
 
+## 2026-08-21 — Day 16
+- Added `RequestLoggingFilter` (`com.filter`) — a `OncePerRequestFilter` that logs HTTP method, URI, status code, and duration (ms) for every request using SLF4J.
+- Fixed last remaining `System.out.println` in `WebConfig` — replaced with `log.info` via `@Slf4j`.
+- Every API call now produces a structured log line: `GET /api/admin/students -> 200 (12ms)`.
+
 ## 2026-08-20 — Day 15
 - Added pagination to `GET /api/admin/students` and `GET /api/admin/teachers`.
 - Both endpoints now accept `?page=0&size=20&sort=fullName` query params via Spring's `Pageable`.

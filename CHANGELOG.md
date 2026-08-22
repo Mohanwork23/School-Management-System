@@ -1,5 +1,11 @@
 # Changelog (recent daily updates)
 
+## 2026-08-23 — Day 18
+- Added unit tests for `AdminServiceImpl` registration and management flows using Mockito.
+- 6 test cases: `registerStudent` (saves + sends email + correct password encoding), `registerStudent` class not found, `registerTeacher` (saves with subjects + sends email), `deleteStudent` (success + not found), `toggleStudentActiveStatus` (flips boolean correctly).
+- Used `ArgumentCaptor` to assert exact entity state passed to `save()` — verifies field mapping not just that save was called.
+- Used `ReflectionTestUtils` to inject `@Value` fields without a Spring context.
+
 ## 2026-08-22 — Day 17
 - Added unit tests for `StudentServiceImpl` using Mockito (`@ExtendWith(MockitoExtension.class)`) — no Spring context loaded, tests run in milliseconds.
 - 6 test cases covering: `getStudentDashboard` (correct summary + student not found), `getReportCard` (grades + attendance %), `getUpcomingExams` (filters past exams + no class assigned), `changePassword` (wrong password + correct password).

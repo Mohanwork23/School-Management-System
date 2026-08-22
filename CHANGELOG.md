@@ -1,5 +1,10 @@
 # Changelog (recent daily updates)
 
+## 2026-08-22 — Day 17
+- Added unit tests for `StudentServiceImpl` using Mockito (`@ExtendWith(MockitoExtension.class)`) — no Spring context loaded, tests run in milliseconds.
+- 6 test cases covering: `getStudentDashboard` (correct summary + student not found), `getReportCard` (grades + attendance %), `getUpcomingExams` (filters past exams + no class assigned), `changePassword` (wrong password + correct password).
+- All repositories and `PasswordEncoder` are mocked — no DB required.
+
 ## 2026-08-21 — Day 16
 - Added `RequestLoggingFilter` (`com.filter`) — a `OncePerRequestFilter` that logs HTTP method, URI, status code, and duration (ms) for every request using SLF4J.
 - Fixed last remaining `System.out.println` in `WebConfig` — replaced with `log.info` via `@Slf4j`.

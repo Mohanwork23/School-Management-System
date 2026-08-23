@@ -1,5 +1,11 @@
 # Changelog (recent daily updates)
 
+## 2026-08-24 — Day 19
+- Added integration tests for `AuthController` login flow using `@SpringBootTest` + `MockMvc`.
+- 4 test cases: valid credentials returns JWT token + username + role, invalid credentials returns 401 with message, blank username returns 400, blank password returns 400.
+- Used `@MockBean` for `AuthenticationManager` and `UserRepository` — full Spring security filter chain runs but no real DB needed.
+- Validates the complete request/response cycle including JWT shape and `@Valid` constraint enforcement.
+
 ## 2026-08-23 — Day 18
 - Added unit tests for `AdminServiceImpl` registration and management flows using Mockito.
 - 6 test cases: `registerStudent` (saves + sends email + correct password encoding), `registerStudent` class not found, `registerTeacher` (saves with subjects + sends email), `deleteStudent` (success + not found), `toggleStudentActiveStatus` (flips boolean correctly).

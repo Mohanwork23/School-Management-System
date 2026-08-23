@@ -26,7 +26,7 @@ public class TeacherController {
     @PostMapping("/{teacherId}/assignment")
     public ResponseEntity<ApiResponse> postAssignment(
             @PathVariable String teacherId,
-            @RequestBody AssignmentRequestDTO dto) {
+            @Valid @RequestBody AssignmentRequestDTO dto) {
         accessControlService.requireCurrentUser(teacherId);
         return ResponseEntity.ok(teacherService.postAssignment(teacherId, dto));
     }
@@ -63,7 +63,7 @@ public class TeacherController {
     @PostMapping("/{teacherId}/publish-result")
     public ResponseEntity<ApiResponse> publishResult(
             @PathVariable String teacherId,
-            @RequestBody ResultEntryDTO dto) {
+            @Valid @RequestBody ResultEntryDTO dto) {
         accessControlService.requireCurrentUser(teacherId);
         return ResponseEntity.ok(teacherService.publishResult(dto));
     }

@@ -70,7 +70,7 @@ public class AdminController {
     }
 
     @PostMapping("/create-class")
-    public ResponseEntity<ApiResponse> createClass(@RequestBody CreateClassDTO dto) {
+    public ResponseEntity<ApiResponse> createClass(@Valid @RequestBody CreateClassDTO dto) {
         return ResponseEntity.ok(adminService.createClass(dto.getClassName(), dto.getSection()));
     }
 
@@ -91,7 +91,7 @@ public class AdminController {
     }
 
     @PostMapping("/subject")
-    public ResponseEntity<ApiResponse> createSubject(@RequestBody SubjectDTO dto) {
+    public ResponseEntity<ApiResponse> createSubject(@Valid @RequestBody SubjectDTO dto) {
         return ResponseEntity.ok(adminService.createSubject(dto));
     }
 

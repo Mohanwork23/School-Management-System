@@ -1,5 +1,14 @@
 # Changelog (recent daily updates)
 
+## 2026-08-25 — Day 20
+- Added Bean Validation constraints to 5 DTOs that had none:
+  - `CreateClassDTO`: `@NotBlank` on `className` and `section`.
+  - `SubjectDTO`: `@NotBlank` on `name`, `@NotBlank` + `@Size(max=10)` on `code`.
+  - `AssignmentRequestDTO`: `@NotBlank` on `title`, `@NotNull` + `@Future` on `dueDate`, `@NotNull` on `classId` and `subjectId`.
+  - `ExamCreateDTO`: `@NotBlank` on `title`/`term`/`academicYear`, `@FutureOrPresent` on `examDate`, `@NotNull` on IDs.
+  - `ResultEntryDTO`: `@NotNull` on IDs and marks, `@DecimalMin(0)` + `@DecimalMax(100)` on `marksObtained`.
+- Added `@Valid` to 4 controller endpoints that were missing it: `createClass`, `createSubject` in `AdminController`; `postAssignment`, `publishResult` in `TeacherController`.
+
 ## 2026-08-24 — Day 19
 - Added integration tests for `AuthController` login flow using `@SpringBootTest` + `MockMvc`.
 - 4 test cases: valid credentials returns JWT token + username + role, invalid credentials returns 401 with message, blank username returns 400, blank password returns 400.
